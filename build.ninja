@@ -1,0 +1,26 @@
+cflags = -Wall -Werror -Wextra -std=c99
+
+rule cc
+  command = gcc $cflags -c $in -o $out
+
+rule link
+  command = gcc $in -o $out
+
+rule clean
+  command = rm build/*
+
+rule test
+  command = build/test
+
+build main: phony build/main
+build build/main.o: cc src/main.c
+build build/main: link build/main.o
+
+build test: phony build/test
+build build/test.o: cc test/test.c
+build build/test: link build/test.o
+
+build clean: clean
+build run-test: test
+
+default main test run-test
