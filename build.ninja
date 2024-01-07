@@ -1,7 +1,8 @@
 cflags = -Wall -Werror -Wextra -std=c99
+headers = -Isrc
 
 rule cc
-  command = gcc $cflags -c $in -o $out
+  command = gcc $headers $cflags -c $in -o $out
 
 rule link
   command = gcc $in -o $out
@@ -9,18 +10,28 @@ rule link
 rule clean
   command = rm build/*
 
-rule test
+rule run-test
   command = build/test
 
 build main: phony build/main
 build build/main.o: cc src/main.c
-build build/main: link build/main.o
+build build/input_parser.o: cc src/input_parser.c
+build build/commands.o: cc src/commands.c
+build build/main: link $
+    build/main.o $
+    build/input_parser.o $
+    build/commands.o
 
 build test: phony build/test
 build build/test.o: cc test/test.c
-build build/test: link build/test.o
+build build/commands_silent.o: cc src/commands.c
+    cflags = $cflags -DSILENT
+build build/test: link $
+    build/test.o $
+    build/input_parser.o $
+    build/commands_silent.o
 
 build clean: clean
-build run-test: test
+build run-test: run-test || test
 
 default main test run-test
