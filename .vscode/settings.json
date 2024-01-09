@@ -1,5 +1,13 @@
 {
     "files.associations": {
-        "input_parser.h": "c"
+        "input_parser.h": "c",
+        "output.h": "c",
+        "__locale": "c",
+        "sstream": "c",
+        "__bit_reference": "c",
+        "string": "c",
+        "string_view": "c",
+        "__string": "c",
+        "locale": "c"
     }
 }

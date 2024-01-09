@@ -2,34 +2,46 @@ cflags = -Wall -Werror -Wextra -std=c99
 headers = -Isrc
 
 rule cc
-  command = gcc $headers $cflags -c $in -o $out
+    deps = gcc
+    depfile = $out.d
+    command = gcc -MD -MF $out.d $headers $cflags -c $in -o $out
 
 rule link
-  command = gcc $in -o $out
+    command = gcc $in -o $out
 
 rule clean
-  command = rm build/*
+    command = rm build/*
 
 rule run-test
-  command = build/test
+    command = build/test
+
+rule run-main
+    command = build/main
 
 build main: phony build/main
 build build/main.o: cc src/main.c
 build build/input_parser.o: cc src/input_parser.c
 build build/commands.o: cc src/commands.c
+build build/rooms.o: cc src/rooms.c
 build build/main: link $
     build/main.o $
     build/input_parser.o $
-    build/commands.o
+    build/commands.o $
+    build/rooms.o
 
 build test: phony build/test
 build build/test.o: cc test/test.c
+    cflags = -Itest $cflags -DTEST
+build build/input_parser_test.o: cc src/input_parser.c
+    cflags = -Itest $cflags -DSILENT -DTEST
 build build/commands_silent.o: cc src/commands.c
-    cflags = $cflags -DSILENT
+    cflags = -Itest $cflags -DSILENT -DTEST
+
 build build/test: link $
     build/test.o $
-    build/input_parser.o $
-    build/commands_silent.o
+    build/input_parser_test.o $
+    build/commands_silent.o $
+    build/rooms.o
 
 build clean: clean
 build run-test: run-test || test
