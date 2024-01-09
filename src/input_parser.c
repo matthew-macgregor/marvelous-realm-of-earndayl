@@ -217,6 +217,7 @@ static char *test_is_keyword() {
     mu_assert("expected keyword 'get' to be true", is_keyword("get") == true);
     mu_assert("expected keyword 'look' to be true", is_keyword("look") == true);
     mu_assert("expected keyword 'axe' to be false", is_keyword("axe") == false);
+    mu_assert("expected keyword 'orc' to be false", is_keyword("orc") == false);
     return 0;
 }
 
@@ -224,10 +225,8 @@ static char *parser_test_all_tests() {
     mu_run_test(test_try_consume_token);
     mu_run_test(test_append_to_pattern_buffer);
     mu_run_test(test_parse_pattern);
-
     mu_run_test(test_param_by_letter);
     mu_run_test(test_input_parser_baseline);
-    // mu_run_test(test_skip_spaces);
     mu_run_test(test_parse_pattern_w_spaces);
     mu_run_test(test_is_char_in_range);
     mu_run_test(test_is_keyword);

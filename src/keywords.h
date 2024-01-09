@@ -3,32 +3,6 @@
 
 #include <string.h>
 
-typedef struct {
-    char *keyword;
-} KEYWORD;
-
-KEYWORD game_keywords[] = {
-    { "look" },
-    { "quit" },
-    { "get" },
-    { "in" },
-    { "into" },
-    { "from" },
-    { "with" }
-};
-
-#define keyword_count  (sizeof game_keywords / sizeof *game_keywords)
-
-bool is_keyword(const char *maybe_keyword) {
-    KEYWORD k;
-    for (unsigned long i = 0; i < keyword_count; ++i) {
-        k = game_keywords[i];
-        if (strcmp(k.keyword, maybe_keyword) == 0) {
-            return true;
-        }
-    }
-
-    return false;
-}
+#define is_keyword(k) (strstr("from;get;in;into;look;quit;with", k) != NULL)
 
 #endif
