@@ -15,7 +15,7 @@ static bool get_input(void) {
 
 int main() {
     puts("Welcome to the Marvelous Realm of Eärndayl");
-    command_id cmd;
+    COMMAND_ID cmd;
     do {
         get_input();
         cmd = parse_raw_input(input);

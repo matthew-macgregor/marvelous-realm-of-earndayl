@@ -7,7 +7,7 @@
 static unsigned player_location = 0;
 #endif
 
-bool interpret_command(command_id verb) {
+bool interpret_command(COMMAND_ID verb) {
     switch (verb) {
         case CMD_QUIT_I:
             puts("It is okay to quit.");

@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 
-typedef int command_id;
+typedef int COMMAND_ID;
 
 #define CMD_QUIT_S  "quit"
 #define CMD_QUIT_I  0
@@ -15,7 +15,7 @@ typedef int command_id;
 /**
  * Returns true to continue the gameloop, false to exit. 
  */
-bool interpret_command(command_id verb);
+bool interpret_command(COMMAND_ID verb);
 
 
 void cmd_look(const char *noun);
