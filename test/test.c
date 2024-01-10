@@ -5,8 +5,12 @@
 #include "commands.h"
 #include "colors.h"
 
-// parser_test.c
-int parser_test_main();
+
+#define TEST_RESULTS_IMPLEMENTATION
+#include "test_results.h"
+
+// extra_test.c
+int extra_test_main();
 
 int tests_run = 0;
 
@@ -14,8 +18,6 @@ static char* test_baseline() {
     mu_assert("error, true should be true", true == 1);
     return 0;
 }
-
-
 
 static char* test_interpret_command_baseline() {
     mu_assert("expected CMD_QUIT_I => false (quit)", interpret_command(CMD_QUIT_I) == false);
@@ -33,18 +35,14 @@ static char* all_tests() {
 
 static int baseline_test_main() {
     char* result = all_tests();
-    if (result != 0) {
-        printf("%sBaseline: %s\n%s", CON_RED, result, CON_RESET);
-    } else {
-        printf("%sBaseline: TESTS PASSED\n%s", CON_GREEN, CON_RESET);
-    }
-
-    return result != 0;
+    return report_test_results("Baseline", result);
 }
 
 int main() {
     int result = 0;
-    result = parser_test_main();
-    result = baseline_test_main() || result;
-    printf("Tests run: %d\n", tests_run);
+    result = baseline_test_main()
+        || extra_test_main() 
+        || parser_test_main();
+    printf(CON_MAGENTA "Result: %s\n" CON_RESET, result == 0 ? "Ok" : "Failed");
+    printf(CON_MAGENTA "Tests run: %d" CON_RESET, tests_run);
 }

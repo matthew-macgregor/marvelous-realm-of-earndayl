@@ -8,6 +8,7 @@
         "string": "c",
         "string_view": "c",
         "__string": "c",
-        "locale": "c"
+        "locale": "c",
+        "commands.h": "c"
     }
 }
