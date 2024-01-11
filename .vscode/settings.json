@@ -9,6 +9,9 @@
         "string_view": "c",
         "__string": "c",
         "locale": "c",
-        "commands.h": "c"
+        "commands.h": "c",
+        "test_results.h": "c",
+        "minunit.h": "c",
+        "stdarg.h": "c"
     }
 }

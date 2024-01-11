@@ -1,16 +1,19 @@
 #include <stdio.h>
 #include <stdbool.h>
+
 #include "minunit.h"
+#define TEST_RESULTS_IMPLEMENTATION
+#include "test_results.h"
 #include "input_parser.h"
 #include "commands.h"
 #include "colors.h"
-
-
-#define TEST_RESULTS_IMPLEMENTATION
-#include "test_results.h"
+#define STRING_UTILS_IMPLEMENTATION
+#include "string_utils.h"
 
 // extra_test.c
 int extra_test_main();
+// string_utils.h
+// int string_utils_test_main();
 
 int tests_run = 0;
 
@@ -20,8 +23,7 @@ static char* test_baseline() {
 }
 
 static char* test_interpret_command_baseline() {
-    mu_assert("expected CMD_QUIT_I => false (quit)", interpret_command(CMD_QUIT_I) == false);
-    mu_assert("expected CMD_UNKNOWN_I => true (continue)", interpret_command(CMD_UNKNOWN_I));
+    mu_assert("expected CMD_QUIT_I => false (quit)", interpret_command("quit") == false);
     return 0;
 }
 
@@ -42,7 +44,8 @@ int main() {
     int result = 0;
     result = baseline_test_main()
         || extra_test_main() 
-        || parser_test_main();
+        || parser_test_main()
+        || string_utils_test_main();
     printf(CON_MAGENTA "Result: %s\n" CON_RESET, result == 0 ? "Ok" : "Failed");
     printf(CON_MAGENTA "Tests run: %d" CON_RESET, tests_run);
 }

@@ -3,12 +3,13 @@
 
 #include "commands.h"
 
-struct CapturedPhraseResult {
+typedef struct CapturedPhraseResult {
     int captured_phrase_count;
     int placeholder_count;
-};
+    bool matched;
+} CapturedPhraseResult;
 
-extern COMMAND_ID parse_raw_input(char *input);
+extern CapturedPhraseResult parse_pattern(const char *input, const char *pattern);
 extern char *get_captured_phrase(char buffer_id);
 extern int get_captured_phrase_count();
 

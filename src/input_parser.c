@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include "commands.h"
 #include "input_parser.h"
-#include "keywords.h"
 
 /**
  * In a command pattern such as 'put A in B', the placeholders are A and B.
@@ -24,6 +23,9 @@ char *get_captured_phrase(char buffer_id) {
     return GET_CAPTURE_BUFFER_BY_LETTER(buffer_id);
 }
 
+/**
+ * Returns the number of phrases captured from the input and pattern. 
+ */
 int get_captured_phrase_count() {
     int count = 0;
     for (char c = 'A'; c <= 'Z'; c++) {
@@ -34,28 +36,6 @@ int get_captured_phrase_count() {
         count++;
     }
     return count;
-}
-
-// Forward declaration
-static struct CapturedPhraseResult parse_pattern(const char *input, const char *pattern);
-
-COMMAND_ID parse_raw_input(char *input) {
-    char *verb = strtok(input, " \n");
-    // char *noun = strtok(NULL, " \n");
-
-    parse_pattern(input, ""); // TODO: make it work
-
-    if (verb != NULL)
-    {
-        if (strcmp(verb, CMD_QUIT_S) == 0) {
-            return CMD_QUIT_I;
-        }
-        else if (strcmp(verb, CMD_LOOK_S) == 0) {
-            return CMD_LOOK_I;
-        }
-    }
-
-    return CMD_UNKNOWN_I;
 }
 
 static void clear_pattern_buffers() {
@@ -88,10 +68,6 @@ static char* try_consume_token(const char *token, const char placeholder_id) {
         return NULL;
     }
 
-    if (is_keyword(token)) {
-        return NULL;
-    }
-
     if (IS_CHAR_IN_RANGE(placeholder_id)) {
         char *param = GET_CAPTURE_BUFFER_BY_LETTER(placeholder_id);
         append_to_pattern_buffer(token, placeholder_id);
@@ -113,8 +89,11 @@ static char* try_consume_token(const char *token, const char placeholder_id) {
  * 
  * Returns the number of patterns that were matched.
  */
-static struct CapturedPhraseResult parse_pattern(const char *input, const char *pattern) {
+extern CapturedPhraseResult parse_pattern(const char *input, const char *pattern) {
     clear_pattern_buffers();
+    CapturedPhraseResult result = { 0, 0, false };
+    if (input == NULL || pattern == NULL) return result;
+
     char *saveptr_input, *saveptr_pattern;
 
     char *input_copy = strdup(input);
@@ -123,26 +102,42 @@ static struct CapturedPhraseResult parse_pattern(const char *input, const char *
     char *input_tok = strtok_r(input_copy, " \n", &saveptr_input);
     char *pattern_tok = strtok_r(pattern_copy, " \n", &saveptr_pattern);
 
-    struct CapturedPhraseResult result;
+
     result.captured_phrase_count = 0;
     result.placeholder_count = 0;
+    result.matched = false;
 
+    int matched_count = 0;
+
+    // Loop through each token from the input and the pattern. Every token should match, unless:
+    // 
+    // - a placeholder 'A' - 'Z' is encountered. In this case, consume the input matching the
+    //   pattern, and stop when reaching a) end of string or b) the next token in the pattern.
     while (input_tok != NULL || pattern_tok != NULL) {
         if (TOKENS_DONT_MATCH(input_tok, pattern_tok)) {
             // the tokens didn't match, take a closer look
             if (LOOKS_LIKE_PLACEHOLDER(pattern_tok)) {
+                // we can look ahead to the next token in the pattern, and use it to know
+                // when to terminate consuming the placeholder pattern.
+                char *next_pattern_tok = strtok_r(NULL, " \n", &saveptr_pattern);
                 result.placeholder_count++;
-                // this looks like it's a placeholder, so let's try to consume it
+
                 bool did_match_at_least_one = false;
-                while(try_consume_token(input_tok, *pattern_tok) != NULL) {
+                while(
+                    TOKENS_DONT_MATCH(input_tok, next_pattern_tok) && 
+                    try_consume_token(input_tok, *pattern_tok) != NULL) {
+                    // this looks like it's a placeholder, so let's try to consume it
                     input_tok = strtok_r(NULL, " \n", &saveptr_input);
                     did_match_at_least_one = true;
                 }
 
                 if (did_match_at_least_one) result.captured_phrase_count++;
-                pattern_tok = strtok_r(NULL, " \n", &saveptr_pattern);
+                pattern_tok = next_pattern_tok;
                 continue;
             }
+        } else {
+            // Tokens do match.
+            matched_count++;
         }
 
         // Next token
@@ -153,6 +148,8 @@ static struct CapturedPhraseResult parse_pattern(const char *input, const char *
     free(input_copy);
     free(pattern_copy);
 
+    result.matched = matched_count > 0 
+        && result.captured_phrase_count == result.placeholder_count;
     return result;
 }
 
@@ -214,19 +211,19 @@ static char *test_try_consume_token() {
 
 static char *test_parse_pattern() {
     struct CapturedPhraseResult result = parse_pattern("get golden axe from orc", "get A from B");
-    mu_assert("parse_pattern: captured_phrase_count", result.captured_phrase_count == 2);
-    mu_assert("parse_pattern: placeholder_count", result.placeholder_count == 2);
-    mu_assert("parse_pattern: golden axe", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('A'), "golden axe") == 0);
-    mu_assert("parse_pattern: orc", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('B'), "orc") == 0);
-    mu_assert("parse_pattern: get golden axe from orc count", get_captured_phrase_count() == 2);
+    mu_assert("parse_pattern 1: captured_phrase_count", result.captured_phrase_count == 2);
+    mu_assert("parse_pattern 1: placeholder_count", result.placeholder_count == 2);
+    mu_assert("parse_pattern 1: golden axe", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('A'), "golden axe") == 0);
+    mu_assert("parse_pattern 1: orc", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('B'), "orc") == 0);
+    mu_assert("parse_pattern 1: get golden axe from orc count", get_captured_phrase_count() == 2);
 
     result = parse_pattern("put sparkling ruby into knapsack with smile", "put A into B with C");
-    mu_assert("parse_pattern: captured_phrase_count", result.captured_phrase_count == 3);
-    mu_assert("parse_pattern: placeholder_count", result.placeholder_count == 3);
-    mu_assert("parse_pattern: sparkling ruby", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('A'), "sparkling ruby") == 0);
-    mu_assert("parse_pattern: knapsack", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('B'), "knapsack") == 0);
-    mu_assert("parse_pattern: smile", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('C'), "smile") == 0);
-    mu_assert("parse_pattern: put sparkling ruby into knapsack with smile count", get_captured_phrase_count() == 3);
+    mu_assert("parse_pattern 2: captured_phrase_count", result.captured_phrase_count == 3);
+    mu_assert("parse_pattern 2: placeholder_count", result.placeholder_count == 3);
+    mu_assert("parse_pattern 2: sparkling ruby", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('A'), "sparkling ruby") == 0);
+    mu_assert("parse_pattern 2: knapsack", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('B'), "knapsack") == 0);
+    mu_assert("parse_pattern 2: smile", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('C'), "smile") == 0);
+    mu_assert("parse_pattern 2: put sparkling ruby into knapsack with smile count", get_captured_phrase_count() == 3);
 
     result = parse_pattern("  get      golden axe    from    grim orc  ", "get A from B");
     mu_assert("parse_pattern: captured_phrase_count", result.captured_phrase_count == 2);
@@ -248,7 +245,7 @@ static char *test_parse_pattern_edge_cases() {
     struct CapturedPhraseResult result = parse_pattern("get golden axe from orc", "get A");
     mu_assert("parse_pattern edges: pattern is shorter, placeholder_count", result.placeholder_count == 1);
     mu_assert("parse_pattern edges: pattern is shorter, captured_phrase_count", result.captured_phrase_count == 1);
-    mu_assert("parse_pattern edges: golden axe", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('A'), "golden axe") == 0);
+    mu_assert("parse_pattern edges: golden axe", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('A'), "golden axe from orc") == 0);
     mu_assert("parse_pattern edges: empty", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('B'), "") == 0);
     mu_assert("parse_pattern edges: get golden axe from orc count", get_captured_phrase_count() == 1);
 
@@ -304,16 +301,8 @@ static char *test_IS_CHAR_IN_RANGE() {
 }
 
 static char *test_input_parser_baseline() {
-    mu_assert("expected CMD_QUIT_I", parse_raw_input("quit") == CMD_QUIT_I);
-    mu_assert("expected CMD_UNKNOWN_I", parse_raw_input("foo") == CMD_UNKNOWN_I);
-    return 0;
-}
-
-static char *test_is_keyword() {
-    mu_assert("expected keyword 'get' to be true", is_keyword("get") == true);
-    mu_assert("expected keyword 'look' to be true", is_keyword("look") == true);
-    mu_assert("expected keyword 'axe' to be false", is_keyword("axe") == false);
-    mu_assert("expected keyword 'orc' to be false", is_keyword("orc") == false);
+    mu_assert("expected quit", parse_pattern("quit", "quit").matched == true);
+    mu_assert("expected quit: false", parse_pattern("foo", "quit").matched == false);
     return 0;
 }
 
@@ -335,7 +324,6 @@ static char *parser_test_all_tests() {
     mu_run_test(test_input_parser_baseline);
     mu_run_test(test_parse_pattern_w_spaces);
     mu_run_test(test_IS_CHAR_IN_RANGE);
-    mu_run_test(test_is_keyword);
     mu_run_test(test_looks_like_placeholder);
     mu_run_test(test_pattern_buffer_overflow);
 
