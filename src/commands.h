@@ -13,6 +13,4 @@ typedef struct Command {
  */
 bool interpret_command(const char *input);
 
-void cmd_look(const char *noun);
-
 #endif

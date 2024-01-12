@@ -1,4 +1,3 @@
-#include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -15,12 +14,12 @@
 
 static char parser_capture_buffer[PARSER_CAPTURE_BUFFER_COUNT][PARSER_CAPTURE_BUFFER_SZ];
 
-#define GET_CAPTURE_BUFFER_BY_LETTER(letter) (parser_capture_buffer[(letter) - 'A'])
-#define SIZE_TO_FIT_BUFFER(str, buffer_sz) ((buffer_sz) - strlen(str) - 1)
-#define IS_CHAR_IN_RANGE(c) ((c) >= 'A' && (c) <= 'Z')
+#define get_capture_buffer_by_letter(letter) (parser_capture_buffer[(letter) - 'A'])
+#define size_to_fit_buffer(str, buffer_sz) ((buffer_sz) - strlen(str) - 1)
+#define is_char_in_range(c) ((c) >= 'A' && (c) <= 'Z')
 
 char *get_captured_phrase(char buffer_id) {
-    return GET_CAPTURE_BUFFER_BY_LETTER(buffer_id);
+    return get_capture_buffer_by_letter(buffer_id);
 }
 
 /**
@@ -29,7 +28,7 @@ char *get_captured_phrase(char buffer_id) {
 int get_captured_phrase_count() {
     int count = 0;
     for (char c = 'A'; c <= 'Z'; c++) {
-        char *buff = GET_CAPTURE_BUFFER_BY_LETTER(c);
+        char *buff = get_capture_buffer_by_letter(c);
         if (*buff == '\0') {
             break;
         }
@@ -40,7 +39,7 @@ int get_captured_phrase_count() {
 
 static void clear_pattern_buffers() {
     for (char c = 'A'; c <= 'Z'; c++) {
-        char *buffer = GET_CAPTURE_BUFFER_BY_LETTER(c);
+        char *buffer = get_capture_buffer_by_letter(c);
         buffer[0] = '\0';
     }
 }
@@ -50,12 +49,12 @@ static void clear_pattern_buffers() {
  * buffer_id: character identifier of the buffer (A-Z).
  */
 static char* append_to_pattern_buffer(const char *input, const char buffer_id) {
-    char *placeholder_buffer = GET_CAPTURE_BUFFER_BY_LETTER(buffer_id);
+    char *placeholder_buffer = get_capture_buffer_by_letter(buffer_id);
     if (strlen(placeholder_buffer) > 0) {
         // Add space between words
-        strncat(placeholder_buffer, " ", SIZE_TO_FIT_BUFFER(placeholder_buffer, PARSER_CAPTURE_BUFFER_SZ));
+        strncat(placeholder_buffer, " ", size_to_fit_buffer(placeholder_buffer, PARSER_CAPTURE_BUFFER_SZ));
     }
-    return strncat(placeholder_buffer, input, SIZE_TO_FIT_BUFFER(placeholder_buffer, PARSER_CAPTURE_BUFFER_SZ));
+    return strncat(placeholder_buffer, input, size_to_fit_buffer(placeholder_buffer, PARSER_CAPTURE_BUFFER_SZ));
 }
 
 /**
@@ -68,8 +67,8 @@ static char* try_consume_token(const char *token, const char placeholder_id) {
         return NULL;
     }
 
-    if (IS_CHAR_IN_RANGE(placeholder_id)) {
-        char *param = GET_CAPTURE_BUFFER_BY_LETTER(placeholder_id);
+    if (is_char_in_range(placeholder_id)) {
+        char *param = get_capture_buffer_by_letter(placeholder_id);
         append_to_pattern_buffer(token, placeholder_id);
         return param;
     }
@@ -77,9 +76,9 @@ static char* try_consume_token(const char *token, const char placeholder_id) {
     return NULL;
 }
 
-#define TOKENS_DONT_MATCH(t1, t2) (((t1) && (t2) && (strcmp(t1, t2) != 0)) || ((t1) == NULL || (t2) == NULL))
-#define TOKENS_MATCH(t1, t2) ((t1) && (t2) && (strcmp(t1, t2) == 0))
-#define LOOKS_LIKE_PLACEHOLDER(tok) ((tok) && (strlen(tok) == 1) && isupper(tok[0]) && IS_CHAR_IN_RANGE(tok[0]))
+#define tokens_dont_match(t1, t2) (((t1) && (t2) && (strcmp(t1, t2) != 0)) || ((t1) == NULL || (t2) == NULL))
+#define tokens_match(t1, t2) ((t1) && (t2) && (strcmp(t1, t2) == 0))
+#define looks_like_placeholder(tok) ((tok) && (strlen(tok) == 1) && is_char_in_range(tok[0]))
 
 /**
  * Given a string as input ("get golden axe") and a pattern ("get A"),
@@ -114,9 +113,9 @@ extern CapturedPhraseResult parse_pattern(const char *input, const char *pattern
     // - a placeholder 'A' - 'Z' is encountered. In this case, consume the input matching the
     //   pattern, and stop when reaching a) end of string or b) the next token in the pattern.
     while (input_tok != NULL || pattern_tok != NULL) {
-        if (TOKENS_DONT_MATCH(input_tok, pattern_tok)) {
+        if (tokens_dont_match(input_tok, pattern_tok)) {
             // the tokens didn't match, take a closer look
-            if (LOOKS_LIKE_PLACEHOLDER(pattern_tok)) {
+            if (looks_like_placeholder(pattern_tok)) {
                 // we can look ahead to the next token in the pattern, and use it to know
                 // when to terminate consuming the placeholder pattern.
                 char *next_pattern_tok = strtok_r(NULL, " \n", &saveptr_pattern);
@@ -124,7 +123,7 @@ extern CapturedPhraseResult parse_pattern(const char *input, const char *pattern
 
                 bool did_match_at_least_one = false;
                 while(
-                    TOKENS_DONT_MATCH(input_tok, next_pattern_tok) && 
+                    tokens_dont_match(input_tok, next_pattern_tok) && 
                     try_consume_token(input_tok, *pattern_tok) != NULL) {
                     // this looks like it's a placeholder, so let's try to consume it
                     input_tok = strtok_r(NULL, " \n", &saveptr_input);
@@ -164,39 +163,39 @@ extern CapturedPhraseResult parse_pattern(const char *input, const char *pattern
 
 extern int tests_run;
 
-static char *test_TOKENS_DONT_MATCH() {
-    mu_assert("TOKENS_DONT_MATCH: no match", TOKENS_DONT_MATCH("one", "two") == true);
-    mu_assert("TOKENS_DONT_MATCH: match", TOKENS_DONT_MATCH("one", "one") == false);
-    mu_assert("TOKENS_DONT_MATCH: no match space", TOKENS_DONT_MATCH("one", "one ") == true);
-    mu_assert("TOKENS_DONT_MATCH: null(0)", TOKENS_DONT_MATCH(NULL, "one") == true);
-    mu_assert("TOKENS_DONT_MATCH: null(1)", TOKENS_DONT_MATCH("one", NULL) == true);
+static char *test_tokens_dont_match() {
+    mu_assert("tokens_dont_match: no match", tokens_dont_match("one", "two") == true);
+    mu_assert("tokens_dont_match: match", tokens_dont_match("one", "one") == false);
+    mu_assert("tokens_dont_match: no match space", tokens_dont_match("one", "one ") == true);
+    mu_assert("tokens_dont_match: null(0)", tokens_dont_match(NULL, "one") == true);
+    mu_assert("tokens_dont_match: null(1)", tokens_dont_match("one", NULL) == true);
     return 0;
 }
 
 static char *test_TOKENS_MATCH() {
-    mu_assert("TOKENS_MATCH: no match", TOKENS_MATCH("one", "two") == false);
-    mu_assert("TOKENS_MATCH: match", TOKENS_MATCH("one", "one") == true);
-    mu_assert("TOKENS_MATCH: no match space", TOKENS_MATCH("one", "one ") == false);
-    mu_assert("TOKENS_MATCH: null(0)", TOKENS_MATCH(NULL, "one") == false);
-    mu_assert("TOKENS_MATCH: null(1)", TOKENS_MATCH("one", NULL) == false);
+    mu_assert("tokens_match: no match", tokens_match("one", "two") == false);
+    mu_assert("tokens_match: match", tokens_match("one", "one") == true);
+    mu_assert("tokens_match: no match space", tokens_match("one", "one ") == false);
+    mu_assert("tokens_match: null(0)", tokens_match(NULL, "one") == false);
+    mu_assert("tokens_match: null(1)", tokens_match("one", NULL) == false);
     return 0;
 }
 
 static char *test_GET_CAPTURE_BUFFER_BY_LETTER() {
-    mu_assert("GET_CAPTURE_BUFFER_BY_LETTER 'A'", GET_CAPTURE_BUFFER_BY_LETTER('A') == parser_capture_buffer[0]);
-    mu_assert("GET_CAPTURE_BUFFER_BY_LETTER 'B'", GET_CAPTURE_BUFFER_BY_LETTER('B') == parser_capture_buffer[1]);
-    mu_assert("GET_CAPTURE_BUFFER_BY_LETTER 'Z'", GET_CAPTURE_BUFFER_BY_LETTER('Z') == parser_capture_buffer[25]);
+    mu_assert("get_capture_buffer_by_letter 'A'", get_capture_buffer_by_letter('A') == parser_capture_buffer[0]);
+    mu_assert("get_capture_buffer_by_letter 'B'", get_capture_buffer_by_letter('B') == parser_capture_buffer[1]);
+    mu_assert("get_capture_buffer_by_letter 'Z'", get_capture_buffer_by_letter('Z') == parser_capture_buffer[25]);
     return 0;
 }
 
 static char *test_append_to_pattern_buffer() {
     clear_pattern_buffers();
     char *buffer = append_to_pattern_buffer("goblin", 'A');
-    mu_assert("append_to_pattern_buffer", buffer == GET_CAPTURE_BUFFER_BY_LETTER('A'));
+    mu_assert("append_to_pattern_buffer", buffer == get_capture_buffer_by_letter('A'));
     mu_assert("append_to_pattern_buffer(test contents)", strcmp(buffer, "goblin") == 0);
 
     buffer = append_to_pattern_buffer("fangs", 'A');
-    mu_assert("append_to_pattern_buffer", buffer == GET_CAPTURE_BUFFER_BY_LETTER('A'));
+    mu_assert("append_to_pattern_buffer", buffer == get_capture_buffer_by_letter('A'));
     mu_assert("append_to_pattern_buffer(append term)", strcmp(buffer, "goblin fangs") == 0);
     return 0;
 }
@@ -205,7 +204,7 @@ static char *test_try_consume_token() {
     clear_pattern_buffers();
     try_consume_token("golden", 'A');
     try_consume_token("axe", 'A');
-    mu_assert("try_consume_token('golden axe' => 'A')", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('A'), "golden axe") == 0);
+    mu_assert("try_consume_token('golden axe' => 'A')", strcmp(get_capture_buffer_by_letter('A'), "golden axe") == 0);
     return 0;
 }
 
@@ -213,30 +212,30 @@ static char *test_parse_pattern() {
     struct CapturedPhraseResult result = parse_pattern("get golden axe from orc", "get A from B");
     mu_assert("parse_pattern 1: captured_phrase_count", result.captured_phrase_count == 2);
     mu_assert("parse_pattern 1: placeholder_count", result.placeholder_count == 2);
-    mu_assert("parse_pattern 1: golden axe", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('A'), "golden axe") == 0);
-    mu_assert("parse_pattern 1: orc", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('B'), "orc") == 0);
+    mu_assert("parse_pattern 1: golden axe", strcmp(get_capture_buffer_by_letter('A'), "golden axe") == 0);
+    mu_assert("parse_pattern 1: orc", strcmp(get_capture_buffer_by_letter('B'), "orc") == 0);
     mu_assert("parse_pattern 1: get golden axe from orc count", get_captured_phrase_count() == 2);
 
     result = parse_pattern("put sparkling ruby into knapsack with smile", "put A into B with C");
     mu_assert("parse_pattern 2: captured_phrase_count", result.captured_phrase_count == 3);
     mu_assert("parse_pattern 2: placeholder_count", result.placeholder_count == 3);
-    mu_assert("parse_pattern 2: sparkling ruby", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('A'), "sparkling ruby") == 0);
-    mu_assert("parse_pattern 2: knapsack", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('B'), "knapsack") == 0);
-    mu_assert("parse_pattern 2: smile", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('C'), "smile") == 0);
+    mu_assert("parse_pattern 2: sparkling ruby", strcmp(get_capture_buffer_by_letter('A'), "sparkling ruby") == 0);
+    mu_assert("parse_pattern 2: knapsack", strcmp(get_capture_buffer_by_letter('B'), "knapsack") == 0);
+    mu_assert("parse_pattern 2: smile", strcmp(get_capture_buffer_by_letter('C'), "smile") == 0);
     mu_assert("parse_pattern 2: put sparkling ruby into knapsack with smile count", get_captured_phrase_count() == 3);
 
     result = parse_pattern("  get      golden axe    from    grim orc  ", "get A from B");
     mu_assert("parse_pattern: captured_phrase_count", result.captured_phrase_count == 2);
     mu_assert("parse_pattern: placeholder_count", result.placeholder_count == 2);
-    mu_assert("parse_pattern: golden axe", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('A'), "golden axe") == 0);
-    mu_assert("parse_pattern: grim orc", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('B'), "grim orc") == 0);
+    mu_assert("parse_pattern: golden axe", strcmp(get_capture_buffer_by_letter('A'), "golden axe") == 0);
+    mu_assert("parse_pattern: grim orc", strcmp(get_capture_buffer_by_letter('B'), "grim orc") == 0);
     mu_assert("parse_pattern: get golden axe from grim orc count", get_captured_phrase_count() == 2);
 
     result = parse_pattern("  get golden axe  from   green orc ", "  get   A from B  ");
     mu_assert("parse_pattern: captured_phrase_count", result.captured_phrase_count == 2);
     mu_assert("parse_pattern: placeholder_count", result.placeholder_count == 2);
-    mu_assert("parse_pattern: golden axe", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('A'), "golden axe") == 0);
-    mu_assert("parse_pattern: orc", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('B'), "green orc") == 0);
+    mu_assert("parse_pattern: golden axe", strcmp(get_capture_buffer_by_letter('A'), "golden axe") == 0);
+    mu_assert("parse_pattern: orc", strcmp(get_capture_buffer_by_letter('B'), "green orc") == 0);
     mu_assert("parse_pattern: get golden axe from green orc", get_captured_phrase_count() == 2);
     return 0;
 }
@@ -245,15 +244,15 @@ static char *test_parse_pattern_edge_cases() {
     struct CapturedPhraseResult result = parse_pattern("get golden axe from orc", "get A");
     mu_assert("parse_pattern edges: pattern is shorter, placeholder_count", result.placeholder_count == 1);
     mu_assert("parse_pattern edges: pattern is shorter, captured_phrase_count", result.captured_phrase_count == 1);
-    mu_assert("parse_pattern edges: golden axe", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('A'), "golden axe from orc") == 0);
-    mu_assert("parse_pattern edges: empty", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('B'), "") == 0);
+    mu_assert("parse_pattern edges: golden axe", strcmp(get_capture_buffer_by_letter('A'), "golden axe from orc") == 0);
+    mu_assert("parse_pattern edges: empty", strcmp(get_capture_buffer_by_letter('B'), "") == 0);
     mu_assert("parse_pattern edges: get golden axe from orc count", get_captured_phrase_count() == 1);
 
     result = parse_pattern("get golden axe", "get A from B");
     mu_assert("parse_pattern edges: pattern is longer, placeholder_count", result.placeholder_count == 2);
     mu_assert("parse_pattern edges: pattern is longer, captured_phrase_count", result.captured_phrase_count == 1);
-    mu_assert("parse_pattern edges: golden axe", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('A'), "golden axe") == 0);
-    mu_assert("parse_pattern edges: empty", strcmp(GET_CAPTURE_BUFFER_BY_LETTER('B'), "") == 0);
+    mu_assert("parse_pattern edges: golden axe", strcmp(get_capture_buffer_by_letter('A'), "golden axe") == 0);
+    mu_assert("parse_pattern edges: empty", strcmp(get_capture_buffer_by_letter('B'), "") == 0);
     mu_assert("parse_pattern edges: get golden axe count", get_captured_phrase_count() == 1);
 
     return 0;
@@ -287,16 +286,16 @@ static char *test_pattern_buffer_overflow() {
         append_to_pattern_buffer("sword", 'A');
     }
 
-    mu_assert("overflow: string length", (PARSER_CAPTURE_BUFFER_SZ - 1) == strlen(GET_CAPTURE_BUFFER_BY_LETTER('A')));
+    mu_assert("overflow: string length", (PARSER_CAPTURE_BUFFER_SZ - 1) == strlen(get_capture_buffer_by_letter('A')));
     return 0;
 }
 
-static char *test_IS_CHAR_IN_RANGE() {
-    mu_assert("expect true for 'A'", IS_CHAR_IN_RANGE('A') == true);
-    mu_assert("expect true for 'Z'", IS_CHAR_IN_RANGE('Z') == true);
-    mu_assert("expect false for 'a'", IS_CHAR_IN_RANGE('a') == false);
-    mu_assert("expect false for 'z'", IS_CHAR_IN_RANGE('z') == false);
-    mu_assert("expect false for ';'", IS_CHAR_IN_RANGE(';') == false);
+static char *test_is_char_in_range() {
+    mu_assert("expect true for 'A'", is_char_in_range('A') == true);
+    mu_assert("expect true for 'Z'", is_char_in_range('Z') == true);
+    mu_assert("expect false for 'a'", is_char_in_range('a') == false);
+    mu_assert("expect false for 'z'", is_char_in_range('z') == false);
+    mu_assert("expect false for ';'", is_char_in_range(';') == false);
     return 0;
 }
 
@@ -307,13 +306,13 @@ static char *test_input_parser_baseline() {
 }
 
 static char *test_looks_like_placeholder() {
-    mu_assert("LOOKS_LIKE_PLACEHOLDER: expected true for A", LOOKS_LIKE_PLACEHOLDER("A") == true);
-    mu_assert("LOOKS_LIKE_PLACEHOLDER: expected false for b", LOOKS_LIKE_PLACEHOLDER("b") == false);
+    mu_assert("looks_like_placeholder: expected true for A", looks_like_placeholder("A") == true);
+    mu_assert("looks_like_placeholder: expected false for b", looks_like_placeholder("b") == false);
     return 0;
 }
 
 static char *parser_test_all_tests() {
-    mu_run_test(test_TOKENS_DONT_MATCH);
+    mu_run_test(test_tokens_dont_match);
     mu_run_test(test_TOKENS_MATCH);
     mu_run_test(test_try_consume_token);
     mu_run_test(test_append_to_pattern_buffer);
@@ -323,7 +322,7 @@ static char *parser_test_all_tests() {
     mu_run_test(test_GET_CAPTURE_BUFFER_BY_LETTER);
     mu_run_test(test_input_parser_baseline);
     mu_run_test(test_parse_pattern_w_spaces);
-    mu_run_test(test_IS_CHAR_IN_RANGE);
+    mu_run_test(test_is_char_in_range);
     mu_run_test(test_looks_like_placeholder);
     mu_run_test(test_pattern_buffer_overflow);
 

@@ -4,11 +4,11 @@
 #include "minunit.h"
 #define TEST_RESULTS_IMPLEMENTATION
 #include "test_results.h"
+#define STRING_UTILS_IMPLEMENTATION
+#include "string_utils.h"
 #include "input_parser.h"
 #include "commands.h"
 #include "colors.h"
-#define STRING_UTILS_IMPLEMENTATION
-#include "string_utils.h"
 
 // extra_test.c
 int extra_test_main();

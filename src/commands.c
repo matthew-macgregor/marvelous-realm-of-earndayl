@@ -4,20 +4,19 @@
 #include "rooms.h"
 #include "input_parser.h"
 
-#ifndef SILENT
-static unsigned player_location = 0;
-#endif
-
 static bool cmd_quit(void); // TODO
 static bool cmd_unknown(const char *input);
+static bool cmd_look(void);
+
+#define END_OF_COMMANDS { NULL, NULL }
 
 bool interpret_command(const char *input) {
     static const Command commands[] = {
-        { "quit",           cmd_quit    },
-        { "look",           NULL        },
-        { "look around",    NULL        },
-        { "look at A",      NULL        },
-        { NULL, NULL }
+        { "quit",           cmd_quit        },
+        { "look",           cmd_look        },
+        { "look around",    NULL            },
+        { "look at A",      NULL            },
+        END_OF_COMMANDS
     };
 
     const Command *matched_cmd;
@@ -35,23 +34,17 @@ bool interpret_command(const char *input) {
 }
 
 static bool cmd_unknown(const char *input) {
-    printf(CON_YELLOW "Sorry, I don't know how to '%s'." CON_RESET, input);
+    (void)input; // silence unused parameter
+    puts("Sorry, I don't know how to '%s'.", input);
+    return true;
+}
+
+static bool cmd_look() {
+    puts_ok("%s", "Not sure what you want to look at!");
     return true;
 }
 
 static bool cmd_quit(void) {
     puts_ok("%s", "Okay, bye!");
     return false;
-}
-
-void cmd_look(const char *phrase)
-{
-   if (phrase != NULL && strcmp(phrase, "around") == 0)
-   {
-      puts("You are in %s.\n", rooms[player_location].description);
-   }
-   else
-   {
-      puts("%s", "I don't understand what you want to see.");
-   }
 }

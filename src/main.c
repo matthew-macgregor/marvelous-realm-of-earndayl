@@ -24,7 +24,7 @@ int main() {
     bool result = true;
     do {
         get_input(input);
-        STRIP_NEWLINE(input);
+        s_strip_newline(input);
         if (is_empty_or_whitespace(input)) continue;
         result = interpret_command(input);
         printf("\n");

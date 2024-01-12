@@ -14,7 +14,7 @@
 
 #else
 
-#define puts(f_, ...) printf((f_), __VA_ARGS__)
+#define puts(f_, ...) printf((f_ "\n"), __VA_ARGS__)
 #define puts_ok(f_, ...) printf((CON_GREEN f_ CON_RESET "\n"), __VA_ARGS__)
 #define puts_warn(f_, ...) printf((CON_YELLOW f_ CON_RESET "\n"), __VA_ARGS__)
 #define puts_err(f_, ...) printf((CON_RED f_ CON_RESET "\n"), __VA_ARGS__)

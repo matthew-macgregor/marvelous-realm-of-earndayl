@@ -1,13 +1,11 @@
 #ifndef STRING_UTILS_H
 #define STRING_UTILS_H
 
-#include <ctype.h>
 #include <string.h>
-
-#define STRIP_NEWLINE(s) input[strcspn(s, "\n")] = 0
 
 // Declarations
 bool is_empty_or_whitespace(const char *input);
+void s_strip_newline(char *input);
 
 // Implementation
 #ifdef STRING_UTILS_IMPLEMENTATION
@@ -15,11 +13,22 @@ bool is_empty_or_whitespace(const char *input) {
     if (input == NULL) return true; //?
     if (*input == '\0') return true;
     for (char *str = (char *) input; *str != '\0'; str++) {
-        if (!isblank(*str)) return false;
+        if (!(*str == ' ' || *str == '\n' || *str == '\t')) return false;
     }
 
     return true;
 }
+
+void s_strip_newline(char *input) {
+    if (!input) return;
+    for (size_t i = 0; input[i] != '\0'; i++) {
+        if (input[i] == '\n') {
+            input[i] = '\0';
+            break;
+        }
+    }
+}
+
 #endif // STRING_UTILS_IMPLEMENTATION
 
 // TESTS
@@ -29,6 +38,18 @@ bool is_empty_or_whitespace(const char *input) {
 #include "test_results.h"
 
 extern int tests_run;
+
+static char *test_strip_newline() {
+    char input[50];
+    memcpy(input, "\n\0", 50);
+    s_strip_newline(input);
+    mu_assert("empty", input[0] == '\0');
+
+    memcpy(input, "aaaaa\n\0", 50);
+    s_strip_newline(input);
+    mu_assert("whitespace", input[5] == '\0');
+    return 0;
+}
 
 static char *test_is_empty_or_whitespace() {
     mu_assert("is empty", is_empty_or_whitespace(""));
@@ -42,6 +63,7 @@ static char *test_is_empty_or_whitespace() {
 
 static char *string_utils_test_all_tests() {
     mu_run_test(test_is_empty_or_whitespace);
+    mu_run_test(test_strip_newline);
 
     // next test here
     return 0;

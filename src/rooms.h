@@ -7,7 +7,7 @@
 
 struct Room {
    const char *description;
-   const char *tag;
+   const char *traits;
 } rooms[] = {
    {"a narrow cave with wet walls", "start"},
    {"the eastern passage", "cave"},
