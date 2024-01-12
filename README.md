@@ -1,3 +1,6 @@
+# Marvelous Realm of Eärndayl
+
+January 2024: this project is a work in progress. The *Marvelous Realm of Eärndayl* is also a working title, inspired by "The Wonderful World of Eamon", a game I played as a kid.
 
 ## License
 

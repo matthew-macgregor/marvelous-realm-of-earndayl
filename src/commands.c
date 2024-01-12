@@ -14,7 +14,7 @@ bool interpret_command(const char *input) {
     static const Command commands[] = {
         { "quit",           cmd_quit        },
         { "look",           cmd_look        },
-        { "look around",    NULL            },
+        { "look around",    cmd_look        },
         { "look at A",      NULL            },
         END_OF_COMMANDS
     };
