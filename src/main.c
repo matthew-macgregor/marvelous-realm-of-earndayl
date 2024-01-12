@@ -10,6 +10,7 @@
 
 #define STRING_UTILS_IMPLEMENTATION
 #include "string_utils.h"
+#include "constants.h"
 
 static bool get_input(char *input) {
    printf("> ");
@@ -17,14 +18,14 @@ static bool get_input(char *input) {
 }
 
 int main(void) {
-    static char input[100];
+    static char input[INPUT_MAX_LENGTH];
     puts_warn("%s", "------------------------------------------");
     puts_ok(  "%s", "Welcome to the Marvelous Realm of Eärndayl");
     puts_warn("%s", "------------------------------------------");
     bool result = true;
     do {
         get_input(input);
-        s_strip_newline(input);
+        s_strip_newline(input, INPUT_MAX_LENGTH);
         if (is_empty_or_whitespace(input)) continue;
         result = interpret_command(input);
         printf("\n");

@@ -1,4 +1,4 @@
-cflags = -Wall -Werror -Wextra -ansi -pedantic -std=c99
+cflags = -Wall -Werror -Wextra -ansi -pedantic -std=c99 -fsanitize=address,undefined
 headers = -Isrc
 
 rule cc
@@ -7,7 +7,7 @@ rule cc
     command = gcc -MD -MF $out.d $headers $cflags -c $in -o $out
 
 rule link
-    command = gcc $in -o $out
+    command = gcc $in -o $out -g -fsanitize=address,undefined
 
 rule clean
     command = rm build/*

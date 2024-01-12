@@ -5,7 +5,7 @@
 
 // Declarations
 bool is_empty_or_whitespace(const char *input);
-void s_strip_newline(char *input);
+void s_strip_newline(char *input, size_t buffer_size);
 
 // Implementation
 #ifdef STRING_UTILS_IMPLEMENTATION
@@ -19,9 +19,9 @@ bool is_empty_or_whitespace(const char *input) {
     return true;
 }
 
-void s_strip_newline(char *input) {
+void s_strip_newline(char *input, size_t buffer_size) {
     if (!input) return;
-    for (size_t i = 0; input[i] != '\0'; i++) {
+    for (size_t i = 0; input[i] != '\0' && i < buffer_size; i++) {
         if (input[i] == '\n') {
             input[i] = '\0';
             break;
@@ -41,12 +41,12 @@ extern int tests_run;
 
 static char *test_strip_newline(void) {
     char input[50];
-    memcpy(input, "\n\0", 50);
-    s_strip_newline(input);
+    memcpy(input, "\n", 2);
+    s_strip_newline(input, 50);
     mu_assert("empty", input[0] == '\0');
 
-    memcpy(input, "aaaaa\n\0", 50);
-    s_strip_newline(input);
+    memcpy(input, "aaaaa\n", 6);
+    s_strip_newline(input, 50);
     mu_assert("whitespace", input[5] == '\0');
     return 0;
 }
