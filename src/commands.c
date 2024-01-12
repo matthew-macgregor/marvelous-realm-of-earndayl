@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "commands.h"
 #include "output.h"
-#include "rooms.h"
+#include "entry.h"
 #include "input_parser.h"
 
 static bool cmd_quit(void); // TODO

@@ -9,6 +9,7 @@
 #include "input_parser.h"
 #include "commands.h"
 #include "colors.h"
+#include "entry.h"
 
 // extra_test.c
 int extra_test_main();
@@ -45,7 +46,8 @@ int main() {
     result = baseline_test_main()
         || extra_test_main() 
         || parser_test_main()
-        || string_utils_test_main();
+        || string_utils_test_main()
+        || entry_test_main();
     printf(CON_MAGENTA "Result: %s\n" CON_RESET, result == 0 ? "Ok" : "Failed");
     printf(CON_MAGENTA "Tests run: %d" CON_RESET, tests_run);
 }
