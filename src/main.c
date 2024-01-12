@@ -16,7 +16,7 @@ static bool get_input(char *input) {
    return fgets(input, INPUT_MAX_LENGTH, stdin) != NULL;
 }
 
-int main() {
+int main(void) {
     static char input[100];
     puts_warn("%s", "------------------------------------------");
     puts_ok(  "%s", "Welcome to the Marvelous Realm of Eärndayl");

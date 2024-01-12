@@ -39,7 +39,7 @@ void s_strip_newline(char *input) {
 
 extern int tests_run;
 
-static char *test_strip_newline() {
+static char *test_strip_newline(void) {
     char input[50];
     memcpy(input, "\n\0", 50);
     s_strip_newline(input);
@@ -51,7 +51,7 @@ static char *test_strip_newline() {
     return 0;
 }
 
-static char *test_is_empty_or_whitespace() {
+static char *test_is_empty_or_whitespace(void) {
     mu_assert("is empty", is_empty_or_whitespace(""));
     mu_assert("is empty with \0", is_empty_or_whitespace("\0"));
     mu_assert("is whitespace", is_empty_or_whitespace("     "));
@@ -61,7 +61,7 @@ static char *test_is_empty_or_whitespace() {
     return 0;
 }
 
-static char *string_utils_test_all_tests() {
+static char *string_utils_test_all_tests(void) {
     mu_run_test(test_is_empty_or_whitespace);
     mu_run_test(test_strip_newline);
 
@@ -69,7 +69,7 @@ static char *string_utils_test_all_tests() {
     return 0;
 }
 
-int string_utils_test_main() {
+int string_utils_test_main(void) {
     const char *result = string_utils_test_all_tests();
     return report_test_results("String Utils", result);
 }

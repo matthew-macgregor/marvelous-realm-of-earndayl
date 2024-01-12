@@ -12,6 +12,8 @@
         "commands.h": "c",
         "test_results.h": "c",
         "minunit.h": "c",
-        "stdarg.h": "c"
+        "stdarg.h": "c",
+        "player.h": "c",
+        "hero.h": "c"
     }
 }

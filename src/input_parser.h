@@ -11,9 +11,9 @@ typedef struct CapturedPhraseResult {
 
 extern CapturedPhraseResult parse_pattern(const char *input, const char *pattern);
 extern char *get_captured_phrase(char buffer_id);
-extern int get_captured_phrase_count();
+extern int get_captured_phrase_count(void);
 
 #ifdef TEST
-extern int parser_test_main();
+extern int parser_test_main(void);
 #endif // end TEST
 #endif // end INPUT_PARSER_H

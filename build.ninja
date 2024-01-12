@@ -1,4 +1,4 @@
-cflags = -Wall -Werror -Wextra -std=c99
+cflags = -Wall -Werror -Wextra -ansi -pedantic -std=c99
 headers = -Isrc
 
 rule cc
@@ -24,11 +24,13 @@ build build/input_parser.o: cc src/input_parser.c
 build build/commands.o: cc src/commands.c
 build build/rooms.o: cc src/rooms.c
 build build/entry.o: cc src/entry.c
+build build/hero.o: cc src/hero.c
 build build/main: link $
     build/main.o $
     build/input_parser.o $
     build/commands.o $
-    build/entry.o
+    build/entry.o $
+    build/hero.o
 
 build test: phony build/test
 build build/test.o: cc test/test.c
@@ -41,14 +43,16 @@ build build/commands_silent.o: cc src/commands.c
     cflags = -Itest $cflags -DSILENT -DTEST
 build build/entry_test.o: cc src/entry.c
     cflags = -Itest $cflags -DSILENT -DTEST
-
+build build/hero_test.o: cc src/hero.c
+    cflags = -Itest $cflags -DSILENT -DTEST
 
 build build/test: link $
     build/test.o $
     build/extra_test.o $
     build/input_parser_test.o $
     build/commands_silent.o $
-    build/entry_test.o
+    build/entry_test.o $
+    build/hero_test.o
 
 build clean: clean
 build run-test: run-test || test

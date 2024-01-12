@@ -14,6 +14,6 @@ const char *entry_get_description(Entry *entry);
 const char *entry_get_traits(Entry *entry);
 
 #ifdef TEST
-extern int entry_test_main();
+extern int entry_test_main(void);
 #endif // end TEST
 #endif // ENTRY_H

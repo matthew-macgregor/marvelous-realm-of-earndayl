@@ -25,7 +25,7 @@ char *get_captured_phrase(char buffer_id) {
 /**
  * Returns the number of phrases captured from the input and pattern. 
  */
-int get_captured_phrase_count() {
+int get_captured_phrase_count(void) {
     int count = 0;
     for (char c = 'A'; c <= 'Z'; c++) {
         char *buff = get_capture_buffer_by_letter(c);
@@ -37,7 +37,7 @@ int get_captured_phrase_count() {
     return count;
 }
 
-static void clear_pattern_buffers() {
+static void clear_pattern_buffers(void) {
     for (char c = 'A'; c <= 'Z'; c++) {
         char *buffer = get_capture_buffer_by_letter(c);
         buffer[0] = '\0';
@@ -163,7 +163,7 @@ extern CapturedPhraseResult parse_pattern(const char *input, const char *pattern
 
 extern int tests_run;
 
-static char *test_tokens_dont_match() {
+static char *test_tokens_dont_match(void) {
     mu_assert("tokens_dont_match: no match", tokens_dont_match("one", "two") == true);
     mu_assert("tokens_dont_match: match", tokens_dont_match("one", "one") == false);
     mu_assert("tokens_dont_match: no match space", tokens_dont_match("one", "one ") == true);
@@ -172,7 +172,7 @@ static char *test_tokens_dont_match() {
     return 0;
 }
 
-static char *test_TOKENS_MATCH() {
+static char *test_TOKENS_MATCH(void) {
     mu_assert("tokens_match: no match", tokens_match("one", "two") == false);
     mu_assert("tokens_match: match", tokens_match("one", "one") == true);
     mu_assert("tokens_match: no match space", tokens_match("one", "one ") == false);
@@ -181,14 +181,14 @@ static char *test_TOKENS_MATCH() {
     return 0;
 }
 
-static char *test_GET_CAPTURE_BUFFER_BY_LETTER() {
+static char *test_GET_CAPTURE_BUFFER_BY_LETTER(void) {
     mu_assert("get_capture_buffer_by_letter 'A'", get_capture_buffer_by_letter('A') == parser_capture_buffer[0]);
     mu_assert("get_capture_buffer_by_letter 'B'", get_capture_buffer_by_letter('B') == parser_capture_buffer[1]);
     mu_assert("get_capture_buffer_by_letter 'Z'", get_capture_buffer_by_letter('Z') == parser_capture_buffer[25]);
     return 0;
 }
 
-static char *test_append_to_pattern_buffer() {
+static char *test_append_to_pattern_buffer(void) {
     clear_pattern_buffers();
     char *buffer = append_to_pattern_buffer("goblin", 'A');
     mu_assert("append_to_pattern_buffer", buffer == get_capture_buffer_by_letter('A'));
@@ -200,7 +200,7 @@ static char *test_append_to_pattern_buffer() {
     return 0;
 }
 
-static char *test_try_consume_token() {
+static char *test_try_consume_token(void) {
     clear_pattern_buffers();
     try_consume_token("golden", 'A');
     try_consume_token("axe", 'A');
@@ -208,7 +208,7 @@ static char *test_try_consume_token() {
     return 0;
 }
 
-static char *test_parse_pattern() {
+static char *test_parse_pattern(void) {
     struct CapturedPhraseResult result = parse_pattern("get golden axe from orc", "get A from B");
     mu_assert("parse_pattern 1: captured_phrase_count", result.captured_phrase_count == 2);
     mu_assert("parse_pattern 1: placeholder_count", result.placeholder_count == 2);
@@ -240,7 +240,7 @@ static char *test_parse_pattern() {
     return 0;
 }
 
-static char *test_parse_pattern_edge_cases() {
+static char *test_parse_pattern_edge_cases(void) {
     struct CapturedPhraseResult result = parse_pattern("get golden axe from orc", "get A");
     mu_assert("parse_pattern edges: pattern is shorter, placeholder_count", result.placeholder_count == 1);
     mu_assert("parse_pattern edges: pattern is shorter, captured_phrase_count", result.captured_phrase_count == 1);
@@ -258,14 +258,14 @@ static char *test_parse_pattern_edge_cases() {
     return 0;
 }
 
-static char *test_parse_pattern_mismatched() {
+static char *test_parse_pattern_mismatched(void) {
     struct CapturedPhraseResult result = parse_pattern("get golden axe", "get A from B");
     mu_assert("parse_pattern_mismatched_0", result.captured_phrase_count == 1 && result.placeholder_count == 2);
 
     return 0;
 }
 
-static char *test_parse_pattern_w_spaces() {
+static char *test_parse_pattern_w_spaces(void) {
     char *input = "get   ";
     char *pattern = "get A";
     struct CapturedPhraseResult result = parse_pattern(input, pattern);
@@ -280,7 +280,7 @@ static char *test_parse_pattern_w_spaces() {
     return 0;
 }
 
-static char *test_pattern_buffer_overflow() {
+static char *test_pattern_buffer_overflow(void) {
     clear_pattern_buffers();
     for (size_t i = 0; i < (PARSER_CAPTURE_BUFFER_SZ / 5) + 50; i++) {
         append_to_pattern_buffer("sword", 'A');
@@ -290,7 +290,7 @@ static char *test_pattern_buffer_overflow() {
     return 0;
 }
 
-static char *test_is_char_in_range() {
+static char *test_is_char_in_range(void) {
     mu_assert("expect true for 'A'", is_char_in_range('A') == true);
     mu_assert("expect true for 'Z'", is_char_in_range('Z') == true);
     mu_assert("expect false for 'a'", is_char_in_range('a') == false);
@@ -299,19 +299,19 @@ static char *test_is_char_in_range() {
     return 0;
 }
 
-static char *test_input_parser_baseline() {
+static char *test_input_parser_baseline(void) {
     mu_assert("expected quit", parse_pattern("quit", "quit").matched == true);
     mu_assert("expected quit: false", parse_pattern("foo", "quit").matched == false);
     return 0;
 }
 
-static char *test_looks_like_placeholder() {
+static char *test_looks_like_placeholder(void) {
     mu_assert("looks_like_placeholder: expected true for A", looks_like_placeholder("A") == true);
     mu_assert("looks_like_placeholder: expected false for b", looks_like_placeholder("b") == false);
     return 0;
 }
 
-static char *parser_test_all_tests() {
+static char *parser_test_all_tests(void) {
     mu_run_test(test_tokens_dont_match);
     mu_run_test(test_TOKENS_MATCH);
     mu_run_test(test_try_consume_token);
@@ -330,7 +330,7 @@ static char *parser_test_all_tests() {
     return 0;
 }
 
-int parser_test_main() {
+int parser_test_main(void) {
     const char *result = parser_test_all_tests();
     return report_test_results("Parser", result);
 }

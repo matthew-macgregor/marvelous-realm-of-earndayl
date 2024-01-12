@@ -47,31 +47,31 @@ const char *entry_get_traits(Entry *entry) {
 #include "commands.h"
 #include "test_results.h"
 
-static char *test_search_by_trait() {
+static char *test_search_by_trait(void) {
     mu_assert("search by trait 'cave'", entry_search_by_trait("cave") == &entries[1]);
     mu_assert("search by trait 'grotto'", entry_search_by_trait("grotto") == &entries[2]);
     mu_assert("search by trait 'bogus'", entry_search_by_trait("bogus") == NULL);
     return 0;
 }
 
-static char *test_entry_count() {
+static char *test_entry_count(void) {
     mu_assert("entry count", ENTRY_COUNT == 3);
     return 0;
 }
 
-static char *test_entry_get_by_location() {
+static char *test_entry_get_by_location(void) {
     mu_assert("entry_get_by_location", entry_has_trait(entry_get_by_location(0), "start"));
     return 0;
 }
 
-static char *test_entry_get_description_trait() {
+static char *test_entry_get_description_trait(void) {
     Entry *entry = entry_get_by_location(0);
     mu_assert("entry_get_description", strcmp(entry_get_description(entry), "a narrow cave with wet walls") == 0);
     mu_assert("entry_get_traits", strcmp(entry_get_traits(entry), "start") == 0);
     return 0;
 }
 
-static char *entry_test_all_tests() {
+static char *entry_test_all_tests(void) {
     mu_run_test(test_search_by_trait);
     mu_run_test(test_entry_count);
     mu_run_test(test_entry_get_by_location);
@@ -81,7 +81,7 @@ static char *entry_test_all_tests() {
     return 0;
 }
 
-int entry_test_main() {
+int entry_test_main(void) {
     const char *result = entry_test_all_tests();
     return report_test_results("Entry", result);
 }

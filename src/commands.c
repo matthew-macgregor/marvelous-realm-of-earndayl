@@ -39,7 +39,7 @@ static bool cmd_unknown(const char *input) {
     return true;
 }
 
-static bool cmd_look() {
+static bool cmd_look(void) {
     puts_ok("%s", "Not sure what you want to look at!");
     return true;
 }

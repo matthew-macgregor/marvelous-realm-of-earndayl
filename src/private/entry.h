@@ -6,4 +6,4 @@ struct Entry {
    const char *traits;
 };
 
-#endif
+#endif // PRIVATE_ENTRY_H
