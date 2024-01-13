@@ -4,10 +4,12 @@
 #include "entry.h"
 #include "hero.h"
 #include "input_parser.h"
+#include "directions.h"
 
 static bool cmd_quit(void); // TODO
 static bool cmd_unknown(const char *input);
 static bool cmd_look(void);
+static bool cmd_move(void);
 
 #define END_OF_COMMANDS { NULL, NULL }
 
@@ -18,6 +20,7 @@ bool interpret_command(const char *input) {
         { "look",           cmd_look        },
         { "look around",    cmd_look        },
         { "look at A",      NULL            },
+        { "go A",           cmd_move        },
         END_OF_COMMANDS
     };
 
@@ -52,6 +55,30 @@ static bool cmd_look(void) {
         printf(" - Exits: %s\n", exits);
     } else {
         printf("%s", "Not sure what you want to look at!");
+    }
+
+    return true;
+}
+
+static bool cmd_move(void) {
+    location_id location = hero_get_location();
+    Entry *entry = entry_get_by_location(location);
+    if (entry != NULL) {
+        const char *phrase = get_captured_phrase('A');
+        const Direction dir = direction_text_to_direction(phrase);
+        const location_id loc = entry_get_location_in_direction(entry, dir);
+        if (loc == LOCATION_UNKNOWN) {
+            printf("You can't go '%s' from here.", phrase);
+        } else {
+            printf("Okay, you can go '%s'\n", phrase);
+            if (!hero_set_location(loc)) {
+                printf("Yikes, something went wrong setting location.\n");
+            } else {
+                cmd_look();
+            }
+        }
+    } else {
+        printf(CON_RED "%s\n" CON_RESET, "You may have gotten lost.");
     }
 
     return true;

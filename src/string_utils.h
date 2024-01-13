@@ -2,6 +2,7 @@
 #define STRING_UTILS_H
 
 #include <string.h>
+#include <ctype.h>
 
 // Declarations
 bool is_empty_or_whitespace(const char *input);
@@ -29,11 +30,13 @@ void s_strip_newline(char *input, size_t buffer_size) {
     }
 }
 
+
 #endif // STRING_UTILS_IMPLEMENTATION
 
 // TESTS
 // ==================================================================
 #ifdef TEST
+#ifdef STRING_UTILS_IMPLEMENTATION
 #include "minunit.h"
 #include "test_results.h"
 
@@ -73,6 +76,7 @@ int string_utils_test_main(void) {
     const char *result = string_utils_test_all_tests();
     return report_test_results("String Utils", result);
 }
+#endif
 
 #endif // TEST
 #endif // STRING_UTILS_H

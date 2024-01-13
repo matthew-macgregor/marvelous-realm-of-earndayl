@@ -17,6 +17,15 @@ location_id hero_get_location(void) {
     return hero.location;
 }
 
+bool hero_set_location(location_id loc_id) {
+    if (loc_id >= 0 && loc_id < entry_get_entry_count()) {
+        hero.location = loc_id;
+        return true;
+    }
+
+    return false;
+}
+
 // TESTS
 // ==================================================================
 #ifdef TEST
