@@ -6,7 +6,6 @@
 #include "commands.h"
 #include "constants.h"
 #include "input_parser.h"
-#include "output.h"
 
 #define STRING_UTILS_IMPLEMENTATION
 #include "string_utils.h"
@@ -19,16 +18,19 @@ static bool get_input(char *input) {
 
 int main(void) {
     static char input[INPUT_MAX_LENGTH];
-    puts_warn("%s", "------------------------------------------");
-    puts_ok(  "%s", "Welcome to the Marvelous Realm of Eärndayl");
-    puts_warn("%s", "------------------------------------------");
+    printf(CON_BLUE   "%s\n" CON_RESET, "------------------------------------------");
+    printf(CON_YELLOW "%s\n" CON_RESET, "Welcome to the Marvelous Realm of Eärndayl");
+    printf(CON_BLUE   "%s\n" CON_RESET, "------------------------------------------");
     bool result = true;
     do {
-        get_input(input);
-        s_strip_newline(input, INPUT_MAX_LENGTH);
-        if (is_empty_or_whitespace(input)) continue;
-        result = interpret_command(input);
-        printf("\n");
+        if (get_input(input)) {
+            s_strip_newline(input, INPUT_MAX_LENGTH);
+            if (is_empty_or_whitespace(input)) continue;
+            result = interpret_command(input);
+            printf("\n");
+        } else {
+            break;
+        }
     } while(result);
     return 0;
 }

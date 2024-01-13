@@ -11,9 +11,9 @@ int report_test_results(const char *suite, const char *result);
 #ifdef TEST_RESULTS_IMPLEMENTATION
 int report_test_results(const char *suite, const char *result) {
     if (result != 0) {
-        printf(CON_RED "%s: %s\n" CON_RESET, suite, result);
+        fprintf(stderr, CON_RED "%s: %s\n" CON_RESET, suite, result);
     } else {
-        printf(CON_GREEN "%s: TESTS PASSED" CON_RESET "\n",  suite);
+        fprintf(stderr, CON_GREEN "%s: TESTS PASSED" CON_RESET "\n",  suite);
     }
 
     return result != 0;

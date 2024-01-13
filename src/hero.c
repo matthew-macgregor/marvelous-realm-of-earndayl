@@ -1,5 +1,6 @@
 #include "private/hero.h"
 #include "hero.h"
+#include "entry.h"
 
 static Hero hero;
 
@@ -12,12 +13,14 @@ Hero *hero_get_hero(void) {
     return &hero;
 }
 
+location_id hero_get_location(void) {
+    return hero.location;
+}
+
 // TESTS
 // ==================================================================
 #ifdef TEST
 #include <stdbool.h>
-
-#include "output.h"
 #include "colors.h"
 #include "minunit.h"
 #include "commands.h"

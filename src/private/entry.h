@@ -4,6 +4,7 @@
 struct Entry {
    const char *description;
    const char *traits;
+   long exits[8]; // N/E/S/W NE/NW/SE/SW
 };
 
 #endif // PRIVATE_ENTRY_H

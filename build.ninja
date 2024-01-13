@@ -13,7 +13,7 @@ rule clean
     command = rm build/*
 
 rule run-test
-    command = build/test
+    command = build/test > /dev/null
 
 rule run-main
     command = build/main

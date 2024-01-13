@@ -155,7 +155,6 @@ extern CapturedPhraseResult parse_pattern(const char *input, const char *pattern
 // TESTS
 // ==================================================================
 #ifdef TEST
-#include "output.h"
 #include "colors.h"
 #include "minunit.h"
 #include "commands.h"

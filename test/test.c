@@ -50,6 +50,6 @@ int main(void) {
         || string_utils_test_main()
         || entry_test_main()
         || hero_test_main();
-    printf(CON_MAGENTA "Result: %s\n" CON_RESET, result == 0 ? "Ok" : "Failed");
-    printf(CON_MAGENTA "Tests run: %d" CON_RESET, tests_run);
+    fprintf(stderr, CON_MAGENTA "Result: %s\n" CON_RESET, result == 0 ? "Ok" : "Failed");
+    fprintf(stderr, CON_MAGENTA "Tests run: %d" CON_RESET, tests_run);
 }

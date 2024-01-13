@@ -1,8 +1,11 @@
 #ifndef HERO_H
 #define HERO_H
 
+#include "entry.h"
+
 typedef struct Hero Hero;
 Hero *hero_get_hero(void);
+location_id hero_get_location(void);
 
 #ifdef TEST
 int hero_test_main(void);
