@@ -10,6 +10,7 @@
 #define STRING_UTILS_IMPLEMENTATION
 #include "string_utils.h"
 #include "constants.h"
+#include "hero.h"
 
 static bool get_input(char *input) {
    printf("> ");
@@ -22,6 +23,8 @@ int main(void) {
     printf(CON_YELLOW "%s\n" CON_RESET, "Welcome to the Marvelous Realm of Eärndayl");
     printf(CON_BLUE   "%s\n" CON_RESET, "------------------------------------------");
     bool result = true;
+    hero_init();
+
     do {
         if (get_input(input)) {
             s_strip_newline(input, INPUT_MAX_LENGTH);

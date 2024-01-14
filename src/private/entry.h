@@ -1,14 +1,15 @@
 #ifndef PRIVATE_ENTRY_H
 #define PRIVATE_ENTRY_H
 
-struct Exit {
-   location_id location;
-};
+// struct Exit {
+//    location_id location;
+// };
 
 struct Entry {
+   const location_id location_id;
    const char *description;
    const char *traits;
-   struct Exit exits[8]; // N/E/S/W NE/NW/SE/SW
+   // struct Exit exits[8]; // N/E/S/W NE/NW/SE/SW
 };
 
 #endif // PRIVATE_ENTRY_H

@@ -12,7 +12,7 @@ rule link
     command = gcc $in -o $out -g -fsanitize=address,undefined
 
 rule run-test
-    command = build/test > /dev/null
+    command = build/test # > /dev/null
 
 rule run-main
     command = build/main
@@ -25,13 +25,15 @@ build build/rooms.o: cc src/rooms.c
 build build/entry.o: cc src/entry.c
 build build/hero.o: cc src/hero.c
 build build/directions.o: cc src/directions.c
+build build/connectors.o: cc src/connectors.c
 build build/main: link $
     build/main.o $
     build/input_parser.o $
     build/commands.o $
     build/entry.o $
     build/hero.o $
-    build/directions.o
+    build/directions.o $
+    build/connectors.o
 
 build test: phony build/test
 build build/test.o: cc test/test.c
@@ -48,6 +50,8 @@ build build/hero_test.o: cc src/hero.c
     cflags = $cflags_test
 build build/directions_test.o: cc src/directions.c
     cflags = $cflags_test
+build build/connectors_test.o: cc src/connectors.c
+    cflags = $cflags_test
 
 build build/test: link $
     build/test.o $
@@ -56,7 +60,8 @@ build build/test: link $
     build/commands_silent.o $
     build/entry_test.o $
     build/hero_test.o $
-    build/directions_test.o
+    build/directions_test.o $
+    build/connectors_test.o
 
 build run-test: run-test || test
 

@@ -5,6 +5,7 @@
 #include "hero.h"
 #include "input_parser.h"
 #include "directions.h"
+#include "connectors.h"
 
 static bool cmd_quit(void); // TODO
 static bool cmd_unknown(const char *input);
@@ -16,6 +17,7 @@ static bool cmd_move(void);
 bool interpret_command(const char *input) {
     static const Command commands[] = {
         { "quit",           cmd_quit        },
+        { "exit",           cmd_quit        },
         { "q",              cmd_quit        },
         { "look",           cmd_look        },
         { "look around",    cmd_look        },
@@ -46,8 +48,9 @@ static bool cmd_unknown(const char *input) {
 
 static bool cmd_look(void) {
     // const Hero *hero = hero_get_hero();
-    location_id location = hero_get_location();
-    Entry *entry = entry_get_by_location(location);
+    location_id location = hero_get_location_id();
+    Entry *entry = entry_get_by_location_id(location);
+    printf("%lu\n", location);
     if (entry != NULL) {
         const char *description = entry_get_description(entry);
         printf("You are in %s.\n", description);
@@ -61,17 +64,18 @@ static bool cmd_look(void) {
 }
 
 static bool cmd_move(void) {
-    location_id location = hero_get_location();
-    Entry *entry = entry_get_by_location(location);
+    location_id location = hero_get_location_id();
+    Entry *entry = entry_get_by_location_id(location);
     if (entry != NULL) {
         const char *phrase = get_captured_phrase('A');
         const Direction dir = direction_text_to_direction(phrase);
-        const location_id loc = entry_get_location_in_direction(entry, dir);
+        const location_id loc = connector_get_location_in_direction(location, dir);
+
         if (loc == LOCATION_UNKNOWN) {
             printf("You can't go '%s' from here.", phrase);
         } else {
             printf("Okay, you can go '%s'\n", phrase);
-            if (!hero_set_location(loc)) {
+            if (!hero_set_location_id(loc)) {
                 printf("Yikes, something went wrong setting location.\n");
             } else {
                 cmd_look();

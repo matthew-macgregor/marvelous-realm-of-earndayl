@@ -4,9 +4,11 @@
 #include "entry.h"
 
 typedef struct Hero Hero;
+
+Hero *hero_init(void);
 Hero *hero_get_hero(void);
-location_id hero_get_location(void);
-bool hero_set_location(location_id loc_id);
+location_id hero_get_location_id(void);
+bool hero_set_location_id(location_id loc_id);
 
 #ifdef TEST
 int hero_test_main(void);

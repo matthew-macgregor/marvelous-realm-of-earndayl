@@ -25,10 +25,6 @@ static char* direction_letter_mapping_lower[8] = { "n", "e", "s", "w", "ne", "nw
 #define DIRECTION_LETTER_MAPPING_COUNT (sizeof direction_letter_mapping / sizeof *direction_letter_mapping)
 #define is_direction_abbr(s) (strlen((s)) < 4)
 
-extern bool direction_bp_isset(bp_direction bp_value, BitpackDirection bp_dir) {
-    return (bp_value & bp_dir) > 0;
-}
-
 /**
  * Given a Direction, returns a constant string to the text representation.
  * Example: NORTH -> "north"
@@ -168,33 +164,10 @@ static char *test_direction_name_to_direction(void) {
     return 0;
 }
 
-static char *test_bp_direction_baseline(void) {
-    mu_assert("BP_NORTH",       BP_NORTH == 1);
-    mu_assert("BP_EAST",        BP_EAST == 2);
-    mu_assert("BP_SOUTH",       BP_SOUTH == 4);
-    mu_assert("BP_WEST",        BP_WEST == 8);
-    mu_assert("BP_NORTHEAST",   BP_NORTHEAST == 0x10); // 16
-    mu_assert("BP_NORTHWEST",   BP_NORTHWEST == 0x20); // 32
-    mu_assert("BP_SOUTHEAST",   BP_SOUTHEAST == 0x40); // 64
-    mu_assert("BP_SOUTHWEST",   BP_SOUTHWEST == 0x80); // 128
-
-    return 0;
-}
-
-static char *test_bp_isset(void) {
-    bp_direction dir = BP_EAST | BP_NORTH;
-    mu_assert("direction_isset: true", direction_bp_isset(dir, BP_NORTH));
-    mu_assert("direction_isset: false", direction_bp_isset(dir, BP_SOUTHEAST) == false);
-    mu_assert("direction_isset (multi): false", direction_bp_isset(dir, BP_SOUTHEAST | BP_SOUTHWEST) == false);
-    return 0;
-}
-
 static char *directions_test_all_tests(void) {
     mu_run_test(test_direction_name_to_direction);
     mu_run_test(test_direction_to_abbr);
     mu_run_test(test_direction_to_text);
-    mu_run_test(test_bp_direction_baseline);
-    mu_run_test(test_bp_isset);
 
     // next test here
     return 0;
