@@ -26,6 +26,7 @@ build build/entry.o: cc src/entry.c
 build build/hero.o: cc src/hero.c
 build build/directions.o: cc src/directions.c
 build build/connectors.o: cc src/connectors.c
+build build/game/entries_data.o: cc src/game/entries_data.c
 build build/main: link $
     build/main.o $
     build/input_parser.o $
@@ -33,7 +34,8 @@ build build/main: link $
     build/entry.o $
     build/hero.o $
     build/directions.o $
-    build/connectors.o
+    build/connectors.o $
+    build/game/entries_data.o
 
 build test: phony build/test
 build build/test.o: cc test/test.c
@@ -52,6 +54,8 @@ build build/directions_test.o: cc src/directions.c
     cflags = $cflags_test
 build build/connectors_test.o: cc src/connectors.c
     cflags = $cflags_test
+build build/game/entries_data_test.o: cc src/game/entries_data.c
+    cflags = $cflags_test
 
 build build/test: link $
     build/test.o $
@@ -61,7 +65,8 @@ build build/test: link $
     build/entry_test.o $
     build/hero_test.o $
     build/directions_test.o $
-    build/connectors_test.o
+    build/connectors_test.o $
+    build/game/entries_data_test.o
 
 build run-test: run-test || test
 

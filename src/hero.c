@@ -1,4 +1,3 @@
-#include "private/hero.h"
 #include "hero.h"
 #include "entry.h"
 

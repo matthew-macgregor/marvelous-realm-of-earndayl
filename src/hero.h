@@ -3,7 +3,9 @@
 
 #include "entry.h"
 
-typedef struct Hero Hero;
+typedef struct Hero {
+    size_t location;
+} Hero;
 
 Hero *hero_init(void);
 Hero *hero_get_hero(void);

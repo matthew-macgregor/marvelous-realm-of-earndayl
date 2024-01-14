@@ -3,19 +3,12 @@
 #include "entry.h"
 #include "string_utils.h"
 #include "connectors.h"
-
-#ifdef TEST
-#include "entries_test.h"
-#else
 #include "game/entries_data.h"
-#endif
 
 // -------------------------             N  / E  / S  / W    NE  / NW  / SE /  SW
 static char* exit_letter_mapping[8] = { "N", "E", "S", "W", "NE", "NW", "SE", "SW" };
 
-extern long entry_get_entry_count(void) {
-    return ENTRY_COUNT;
-}
+// extern Entry entries[];
 
 Entry *entry_get_start_entry(void) {
     return entry_search_by_trait("start");
@@ -27,7 +20,8 @@ location_id entry_get_start_location_id(void) {
 }
 
 Entry *entry_search_by_trait(const char *trait) {
-    for (size_t i = 0; i < ENTRY_COUNT; i++) {
+    size_t entry_cnt = entry_get_entry_count();
+    for (size_t i = 0; i < entry_cnt; i++) {
         Entry entry = entries[i];
         if (strstr(entry.traits, trait)) {
             return &entries[i];
@@ -38,7 +32,8 @@ Entry *entry_search_by_trait(const char *trait) {
 }
 
 Entry *entry_get_by_location_id(location_id location_idx) {
-    for (size_t i = 0; i < ENTRY_COUNT; i++) {
+    size_t entry_cnt = entry_get_entry_count();
+    for (size_t i = 0; i < entry_cnt; i++) {
         if (entries[i].location_id == location_idx) {
             return &entries[i];
         }
@@ -87,14 +82,15 @@ const char *entry_get_exits(const Entry *entry) {
 #include "game/entry_ids.h"
 
 static char *test_search_by_trait(void) {
-    mu_assert("search by trait 'cave'", entry_search_by_trait("cave") == &entries[1]);
-    mu_assert("search by trait 'grotto'", entry_search_by_trait("grotto") == &entries[2]);
+    mu_assert("search by trait 'start'", entry_search_by_trait("start") == &entries[0]);
+    mu_assert("search by trait 'grotto'", entry_search_by_trait("grotto") == &entries[1]);
     mu_assert("search by trait 'bogus'", entry_search_by_trait("bogus") == NULL);
     return 0;
 }
 
 static char *test_entry_count(void) {
-    mu_assert("entry count", ENTRY_COUNT == 3);
+    size_t entry_cnt = entry_get_entry_count();
+    mu_assert("entry count", entry_cnt == 3);
     return 0;
 }
 

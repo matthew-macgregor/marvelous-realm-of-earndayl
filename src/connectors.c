@@ -1,9 +1,5 @@
 #include "connectors.h"
-#ifdef TEST
-#include "connectors_data_test.h"
-#else
 #include "game/connectors_data.h"
-#endif
 
 extern Connector *connector_get_connector_in_direction(const location_id current_loc, const Direction direction) {
     for (size_t i = 0; i < CONNECTOR_COUNT; i++) {

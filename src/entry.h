@@ -7,9 +7,13 @@
 #include "directions.h"
 #include "location.h"
 
-typedef struct Entry Entry;
+typedef struct Entry {
+   const location_id location_id;
+   const char *description;
+   const char *traits;
+} Entry;
 
-extern long entry_get_entry_count(void);
+extern size_t entry_get_entry_count(void);
 Entry *entry_get_start_entry(void);
 location_id entry_get_start_location_id(void);
 Entry *entry_search_by_trait(const char *trait);

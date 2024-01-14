@@ -14,10 +14,7 @@
 #include "directions.h"
 #include "connectors.h"
 
-// extra_test.c
 int extra_test_main(void);
-// string_utils.h
-// int string_utils_test_main();
 
 int tests_run = 0;
 
