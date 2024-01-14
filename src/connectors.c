@@ -1,11 +1,11 @@
 #include "connectors.h"
-#ifndef TEST
-#include "game/connectors_data.h"
-#else
+#ifdef TEST
 #include "connectors_data_test.h"
+#else
+#include "game/connectors_data.h"
 #endif
 
-extern Connector *connector_get_connector_in_direction(location_id current_loc, Direction direction) {
+extern Connector *connector_get_connector_in_direction(const location_id current_loc, const Direction direction) {
     for (size_t i = 0; i < CONNECTOR_COUNT; i++) {
         Connector *conn = &connectors[i];
         if (conn->location_a == current_loc && conn->direction == direction) {
@@ -41,6 +41,6 @@ static char *connectors_test_all_tests(void) {
 
 int connectors_test_main(void) {
     const char *result = connectors_test_all_tests();
-    return report_test_results("Directions", result);
+    return report_test_results("Connectors", result);
 }
 #endif // TEST
