@@ -4,7 +4,7 @@
 #include "entry.h"
 
 typedef struct Hero {
-    size_t location;
+    Entry* location;
 } Hero;
 
 Hero *hero_init(void);

@@ -4,7 +4,7 @@
 static Hero hero;
 
 Hero *hero_init(void) {
-    hero.location = entry_get_start_location_id();
+    hero.location = entry_get_start_entry();
     return &hero;
 }
 
@@ -13,13 +13,13 @@ Hero *hero_get_hero(void) {
 }
 
 location_id hero_get_location_id(void) {
-    return hero.location;
+    return hero.location != NULL ? hero.location->location_id : LOCATION_UNKNOWN;
 }
 
 bool hero_set_location_id(location_id new_loc_id) {
     Entry *entry = entry_get_by_location_id(new_loc_id);
     if (entry != NULL) {
-        hero.location = new_loc_id;
+        hero.location = entry;
         return true;
     }
 
@@ -41,7 +41,7 @@ static char *hero_test_get_hero(void) {
 }
 
 static char *hero_test_init(void) {
-    mu_assert("hero_init", hero_init()->location == 100);
+    mu_assert("hero_init", hero_init()->location == entry_get_start_entry());
     return 0;
 }
 
