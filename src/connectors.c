@@ -1,10 +1,10 @@
 #include "connectors.h"
 #include "game/connectors_data.h"
 
-extern Connector *connector_get_connector_in_direction(const location_id current_loc, const Direction direction) {
+extern Connector *connector_get_connector_in_direction(const Entry *current_loc, const Direction direction) {
     for (size_t i = 0; i < CONNECTOR_COUNT; i++) {
         Connector *conn = &connectors[i];
-        if (conn->location_a == current_loc && conn->direction == direction) {
+        if (conn->entry_a == current_loc && conn->direction == direction) {
             return conn;
         }
     }
@@ -12,9 +12,11 @@ extern Connector *connector_get_connector_in_direction(const location_id current
     return NULL;
 }
 
-location_id connector_get_location_in_direction(location_id current_loc, const Direction direction) {
+location_id connector_get_location_id_in_direction(const Entry *current_loc, const Direction direction) {
     Connector *conn = connector_get_connector_in_direction(current_loc, direction);
-    return conn != NULL ? conn->location_b : LOCATION_UNKNOWN;
+    return conn == NULL             ?   LOCATION_UNKNOWN :
+           conn->entry_b == NULL    ?   LOCATION_UNKNOWN :
+                                        conn->entry_b->location_id;
 }
 
 #ifdef TEST
@@ -24,7 +26,8 @@ location_id connector_get_location_in_direction(location_id current_loc, const D
 #include "test_results.h"
 
 static char *test_connector_get_location_in_direction(void) {
-    mu_assert("connector_get_location_in_direction", connector_get_location_in_direction(E_ENTRY_CAVE, WEST) == E_WESTERN_PASSAGE);
+    mu_assert("connector_get_location_in_direction", 
+        connector_get_location_id_in_direction(EP_ENTRY_CAVE, WEST) == E_WESTERN_PASSAGE);
     return 0;
 }
 

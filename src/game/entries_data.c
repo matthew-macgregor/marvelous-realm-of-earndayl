@@ -1,5 +1,4 @@
 #include "entries_data.h"
-#include "game/entry_ids.h"
 
 Entry entries[] = {
    {E_ENTRY_CAVE, "a narrow cave with wet walls", "start" },

@@ -61,7 +61,7 @@ const char *entry_get_exits(const Entry *entry) {
     exits[0] = '\0';
     bool at_least_one = false;
     for (Direction dir = 0; dir < 8; dir++) {
-        location_id loc = connector_get_location_in_direction(entry->location_id, dir);
+        location_id loc = connector_get_location_id_in_direction(entry, dir);
         if (loc > LOCATION_UNKNOWN) {
             if (at_least_one) {
                 strncat(exits, " / ", 3);
@@ -79,7 +79,6 @@ const char *entry_get_exits(const Entry *entry) {
 #include "minunit.h"
 #include "commands.h"
 #include "test_results.h"
-#include "game/entry_ids.h"
 
 static char *test_search_by_trait(void) {
     mu_assert("search by trait 'start'", entry_search_by_trait("start") == &entries[0]);

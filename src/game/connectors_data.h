@@ -1,13 +1,13 @@
-#ifndef GAME_DATA_CONNECTORS_H
-#define GAME_DATA_CONNECTORS_H
+#ifndef GAMEP_DATA_CONNECTORS_H
+#define GAMEP_DATA_CONNECTORS_H
 #include "connectors.h"
-#include "entry_ids.h"
+#include "game/entries_data.h"
 
 static Connector connectors[] = {
-    { E_ENTRY_CAVE, EAST, E_EASTERN_PASSAGE },
-    { E_EASTERN_PASSAGE, WEST, E_ENTRY_CAVE },
-    { E_ENTRY_CAVE, WEST, E_WESTERN_PASSAGE },
-    { E_WESTERN_PASSAGE, EAST, E_ENTRY_CAVE }
+    { EP_ENTRY_CAVE, EAST, EP_EASTERN_PASSAGE },
+    { EP_EASTERN_PASSAGE, WEST, EP_ENTRY_CAVE },
+    { EP_ENTRY_CAVE, WEST, EP_WESTERN_PASSAGE },
+    { EP_WESTERN_PASSAGE, EAST, EP_ENTRY_CAVE }
 };
 
 #define CONNECTOR_COUNT (long)(sizeof connectors / sizeof *connectors)

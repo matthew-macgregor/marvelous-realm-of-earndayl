@@ -69,7 +69,7 @@ static bool cmd_move(void) {
     if (entry != NULL) {
         const char *phrase = get_captured_phrase('A');
         const Direction dir = direction_text_to_direction(phrase);
-        const location_id loc = connector_get_location_in_direction(location, dir);
+        const location_id loc = connector_get_location_id_in_direction(entry, dir);
 
         if (loc == LOCATION_UNKNOWN) {
             printf("You can't go '%s' from here.", phrase);
