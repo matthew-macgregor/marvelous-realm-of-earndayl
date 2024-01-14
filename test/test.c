@@ -15,6 +15,7 @@
 #include "hero.h"
 #include "directions.h"
 #include "connectors.h"
+#include "objects.h"
 
 int extra_test_main(void);
 
@@ -52,7 +53,8 @@ int main(void) {
         || entry_test_main()
         || hero_test_main()
         || directions_test_main()
-        || connectors_test_main();
+        || connectors_test_main()
+        || objects_test_main();
     fprintf(stderr, CON_MAGENTA "Result: %s\n" CON_RESET, result == 0 ? "Ok" : "Failed");
     fprintf(stderr, CON_MAGENTA "Tests run: %d\n" CON_RESET, tests_run);
 }

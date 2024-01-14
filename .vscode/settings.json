@@ -17,6 +17,7 @@
         "hero.h": "c",
         "entry.h": "c",
         "connectors.h": "c",
-        "entries_test.h": "c"
+        "entries_test.h": "c",
+        "game_data.h": "c"
     }
 }

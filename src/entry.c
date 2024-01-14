@@ -3,7 +3,7 @@
 #include "entry.h"
 #include "string_utils.h"
 #include "connectors.h"
-#include "game/entries_data.h"
+#include "game/game_data.h"
 
 // -------------------------             N  / E  / S  / W    NE  / NW  / SE /  SW
 static char* exit_letter_mapping[8] = { "N", "E", "S", "W", "NE", "NW", "SE", "SW" };
@@ -21,6 +21,7 @@ location_id entry_get_start_location_id(void) {
 
 Entry *entry_search_by_trait(const char *trait) {
     size_t entry_cnt = entry_get_entry_count();
+    EntryArrayPtr entries = entry_get_entries();
     for (size_t i = 0; i < entry_cnt; i++) {
         Entry entry = entries[i];
         if (strstr(entry.traits, trait)) {
@@ -33,6 +34,7 @@ Entry *entry_search_by_trait(const char *trait) {
 
 Entry *entry_get_by_location_id(location_id location_idx) {
     size_t entry_cnt = entry_get_entry_count();
+    EntryArrayPtr entries = entry_get_entries();
     for (size_t i = 0; i < entry_cnt; i++) {
         if (entries[i].location_id == location_idx) {
             return &entries[i];
@@ -81,6 +83,7 @@ const char *entry_get_exits(const Entry *entry) {
 #include "test_results.h"
 
 static char *test_search_by_trait(void) {
+    EntryArrayPtr entries = entry_get_entries();
     mu_assert("search by trait 'start'", entry_search_by_trait("start") == &entries[0]);
     mu_assert("search by trait 'grotto'", entry_search_by_trait("grotto") == &entries[1]);
     mu_assert("search by trait 'bogus'", entry_search_by_trait("bogus") == NULL);

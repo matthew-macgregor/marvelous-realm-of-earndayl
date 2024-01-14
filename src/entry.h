@@ -12,8 +12,13 @@ typedef struct Entry {
    const char *description;
    const char *traits;
 } Entry;
+typedef Entry* EntryArrayPtr;
 
-extern size_t entry_get_entry_count(void);
+// Defined in game/game_data.c
+size_t entry_get_entry_count(void);
+EntryArrayPtr entry_get_entries(void);
+
+// Defined in entry.c
 Entry *entry_get_start_entry(void);
 location_id entry_get_start_location_id(void);
 Entry *entry_search_by_trait(const char *trait);
