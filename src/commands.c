@@ -6,6 +6,7 @@
 #include "input_parser.h"
 #include "directions.h"
 #include "connectors.h"
+#include "objects.h"
 
 static bool cmd_quit(void); // TODO
 static bool cmd_unknown(const char *input);
@@ -46,6 +47,26 @@ static bool cmd_unknown(const char *input) {
     return true;
 }
 
+static bool cmd_look_objects(void) {
+    location_id location = hero_get_location_id();
+    Entry *entry = entry_get_by_location_id(location);
+    size_t obj_count = obj_get_object_count();
+    ObjectArrayPtr objects = obj_get_objects();
+
+    printf("You see: ");
+    bool found_obj = false;
+    for (size_t i = 0; i < obj_count; i++) {
+        Object obj = objects[i];
+        if (obj.location == entry) {
+            printf("\n - %s", obj.description);
+            found_obj = true;
+        }
+    }
+
+    found_obj ? printf("\n") : printf("nothing.\n");
+    return true;
+}
+
 static bool cmd_look(void) {
     // const Hero *hero = hero_get_hero();
     location_id location = hero_get_location_id();
@@ -53,8 +74,11 @@ static bool cmd_look(void) {
     if (entry != NULL) {
         const char *description = entry_get_description(entry);
         printf("You are in %s.\n", description);
+
+        cmd_look_objects();
+
         const char *exits = entry_get_exits(entry);
-        printf(" - Exits: %s\n", exits);
+        printf("Exits: %s\n", exits);
     } else {
         printf("%s", "Not sure what you want to look at!");
     }

@@ -84,15 +84,15 @@ const char *entry_get_exits(const Entry *entry) {
 
 static char *test_search_by_trait(void) {
     EntryArrayPtr entries = entry_get_entries();
-    mu_assert("search by trait 'start'", entry_search_by_trait("start") == &entries[0]);
-    mu_assert("search by trait 'grotto'", entry_search_by_trait("grotto") == &entries[1]);
+    mu_assert("search by trait 'start'", entry_search_by_trait("start") == EP_ENTRY_CAVE);
+    mu_assert("search by trait 'grotto'", entry_search_by_trait("grotto") == EP_EASTERN_PASSAGE);
     mu_assert("search by trait 'bogus'", entry_search_by_trait("bogus") == NULL);
     return 0;
 }
 
 static char *test_entry_count(void) {
     size_t entry_cnt = entry_get_entry_count();
-    mu_assert("entry count", entry_cnt == 3);
+    mu_assert("entry count", entry_cnt == 4);
     return 0;
 }
 

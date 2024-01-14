@@ -1,9 +1,9 @@
-#include "objects.h"
 #include <stddef.h>
 #include <string.h>
+#include "objects.h"
 
 Object *obj_search_by_trait(const char *trait) {
-    size_t count = obj_get_connector_count();
+    size_t count = obj_get_object_count();
     ObjectArrayPtr objects = obj_get_objects();
     for (size_t i = 0; i < count; i++) {
         Object o = objects[i];
@@ -16,7 +16,7 @@ Object *obj_search_by_trait(const char *trait) {
 }
 
 Object *obj_find_by_id(object_id id) {
-    size_t count = obj_get_connector_count();
+    size_t count = obj_get_object_count();
     ObjectArrayPtr objects = obj_get_objects();
     for (size_t i = 0; i < count; i++) {
         Object o = objects[i];

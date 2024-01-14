@@ -14,7 +14,7 @@ typedef struct Object {
 typedef Object* ObjectArrayPtr;
 
 ObjectArrayPtr obj_get_objects(void);
-size_t obj_get_connector_count(void);
+size_t obj_get_object_count(void);
 Object *obj_search_by_trait(const char *trait);
 Object *obj_find_by_id(object_id id);
 
