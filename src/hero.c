@@ -13,7 +13,7 @@ Hero *hero_get_hero(void) {
 }
 
 location_id hero_get_location_id(void) {
-    return hero.location != NULL ? hero.location->location_id : LOCATION_UNKNOWN;
+    return hero.location != NULL ? hero.location->id : LOCATION_UNKNOWN;
 }
 
 bool hero_set_location_id(location_id new_loc_id) {

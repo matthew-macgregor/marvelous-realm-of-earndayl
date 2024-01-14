@@ -17,7 +17,7 @@ location_id connector_get_location_id_in_direction(const Entry *current_loc, con
     Connector *conn = connector_get_connector_in_direction(current_loc, direction);
     return conn == NULL             ?   LOCATION_UNKNOWN :
            conn->entry_b == NULL    ?   LOCATION_UNKNOWN :
-                                        conn->entry_b->location_id;
+                                        conn->entry_b->id;
 }
 
 #ifdef TEST

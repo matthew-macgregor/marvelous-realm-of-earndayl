@@ -8,7 +8,7 @@
 #include "location.h"
 
 typedef struct Entry {
-   const location_id location_id;
+   const location_id id;
    const char *description;
    const char *traits;
 } Entry;
