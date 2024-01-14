@@ -5,6 +5,8 @@
 #include <ctype.h>
 
 // Declarations
+#define size_to_fit_buffer(str, buffer_sz) ((buffer_sz) - strlen(str) - 1)
+
 bool is_empty_or_whitespace(const char *input);
 void s_strip_newline(char *input, size_t buffer_size);
 

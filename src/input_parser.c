@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "commands.h"
 #include "input_parser.h"
+#include "string_utils.h"
 
 /**
  * In a command pattern such as 'put A in B', the placeholders are A and B.
@@ -15,7 +16,7 @@
 static char parser_capture_buffer[PARSER_CAPTURE_BUFFER_COUNT][PARSER_CAPTURE_BUFFER_SZ];
 
 #define get_capture_buffer_by_letter(letter) (parser_capture_buffer[(letter) - 'A'])
-#define size_to_fit_buffer(str, buffer_sz) ((buffer_sz) - strlen(str) - 1)
+
 #define is_char_in_range(c) ((c) >= 'A' && (c) <= 'Z')
 
 char *get_captured_phrase(char buffer_id) {

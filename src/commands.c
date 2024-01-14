@@ -50,7 +50,6 @@ static bool cmd_look(void) {
     // const Hero *hero = hero_get_hero();
     location_id location = hero_get_location_id();
     Entry *entry = entry_get_by_location_id(location);
-    printf("%lu\n", location);
     if (entry != NULL) {
         const char *description = entry_get_description(entry);
         printf("You are in %s.\n", description);
@@ -69,12 +68,13 @@ static bool cmd_move(void) {
     if (entry != NULL) {
         const char *phrase = get_captured_phrase('A');
         const Direction dir = direction_text_to_direction(phrase);
+        const char *dir_text = direction_to_text(dir);
         const location_id loc = connector_get_location_id_in_direction(entry, dir);
 
         if (loc == LOCATION_UNKNOWN) {
-            printf("You can't go '%s' from here.", phrase);
+            printf("You can't go '%s' from here.", dir_text);
         } else {
-            printf("Okay, you can go '%s'\n", phrase);
+            printf("You move cautiously to the %s.\n", dir_text);
             if (!hero_set_location_id(loc)) {
                 printf("Yikes, something went wrong setting location.\n");
             } else {

@@ -9,12 +9,18 @@
 
 #define STRING_UTILS_IMPLEMENTATION
 #include "string_utils.h"
+// #define OUTPUT_IMPLEMENTATION
+// #include "output.h"
 #include "constants.h"
 #include "hero.h"
 
 static bool get_input(char *input) {
-   printf("> ");
-   return fgets(input, INPUT_MAX_LENGTH, stdin) != NULL;
+    printf(CON_CYAN "> " CON_YELLOW);
+    if (fgets(input, INPUT_MAX_LENGTH, stdin) != NULL) {
+        printf(CON_RESET);
+        return true;
+    }
+    return false;
 }
 
 int main(void) {
@@ -22,6 +28,7 @@ int main(void) {
     printf(CON_BLUE   "%s\n" CON_RESET, "------------------------------------------");
     printf(CON_YELLOW "%s\n" CON_RESET, "Welcome to the Marvelous Realm of Eärndayl");
     printf(CON_BLUE   "%s\n" CON_RESET, "------------------------------------------");
+
     bool result = true;
     hero_init();
 

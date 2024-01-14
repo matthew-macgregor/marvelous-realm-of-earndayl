@@ -6,6 +6,8 @@
 #include "test_results.h"
 #define STRING_UTILS_IMPLEMENTATION
 #include "string_utils.h"
+// #define OUTPUT_IMPLEMENTATION
+// #include "output.h"
 #include "input_parser.h"
 #include "commands.h"
 #include "colors.h"
