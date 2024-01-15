@@ -16,6 +16,10 @@ location_id hero_get_location_id(void) {
     return hero.location != NULL ? hero.location->id : LOCATION_UNKNOWN;
 }
 
+Entry *hero_get_entry(void) {
+    return hero.location != NULL ? hero.location : NULL;
+}
+
 bool hero_set_location_id(location_id new_loc_id) {
     Entry *entry = entry_get_by_location_id(new_loc_id);
     if (entry != NULL) {
@@ -35,19 +39,25 @@ bool hero_set_location_id(location_id new_loc_id) {
 #include "commands.h"
 #include "test_results.h"
 
-static char *hero_test_get_hero(void) {
+static char *test_hero_get_hero(void) {
     mu_assert("hero_get_hero", hero_get_hero() == &hero);
     return 0;
 }
 
-static char *hero_test_init(void) {
+static char *test_hero_init(void) {
     mu_assert("hero_init", hero_init()->location == entry_get_start_entry());
     return 0;
 }
 
+static char *test_hero_get_entry(void) {
+    mu_assert("hero_get_entry", hero_get_entry() == hero.location);
+    return 0;
+}
+
 static char *hero_test_all_tests(void) { 
-    mu_run_test(hero_test_get_hero);
-    mu_run_test(hero_test_init);
+    mu_run_test(test_hero_get_hero);
+    mu_run_test(test_hero_init);
+    mu_run_test(test_hero_get_entry);
 
     // next test here
     return 0;

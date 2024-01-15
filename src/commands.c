@@ -7,11 +7,13 @@
 #include "directions.h"
 #include "connectors.h"
 #include "objects.h"
+#include "inventory.h"
 
 static bool cmd_quit(void); // TODO
 static bool cmd_unknown(const char *input);
 static bool cmd_look(void);
 static bool cmd_move(void);
+static bool cmd_get(void);
 
 #define END_OF_COMMANDS { NULL, NULL }
 static const Command commands[] = {
@@ -23,6 +25,7 @@ static const Command commands[] = {
     { "look around",    cmd_look        },
     { "look at A",      NULL            },
     { "go A",           cmd_move        },
+    { "get A",          cmd_get         },
     END_OF_COMMANDS
 };
 
@@ -42,14 +45,32 @@ bool interpret_command(const char *input) {
 }
 
 static bool cmd_unknown(const char *input) {
-    (void)input; // silence unused parameter
     printf(CON_RED "Sorry, I don't know how to '%s'." CON_RESET, input);
     return true;
 }
 
+static bool cmd_get(void) {
+    Entry *here = hero_get_entry();
+    Entry *inventory = inv_get_inventory_entry();
+    (void)inventory;
+    const char *phrase = get_captured_phrase('A');
+    Object *obj = obj_search_by_trait_and_location_id(phrase, here->id);
+    if (obj != NULL) {
+        // printf("You're in luck, '%s' is here.\n", phrase);
+        if (inv_add_object_to_inventory(obj)) {
+            printf("You pick up %s.", obj->description);
+        } else {
+            printf("You fail to get the %s.\n", obj->description);
+        }
+    } else {
+        printf(CON_RED "Sorry, no '%s' is here." CON_RESET, phrase);
+    }
+
+    return true;
+}
+
 static bool cmd_look_objects(void) {
-    location_id location = hero_get_location_id();
-    Entry *entry = entry_get_by_location_id(location);
+    Entry *entry = hero_get_entry();
     size_t obj_count = obj_get_object_count();
     ObjectArrayPtr objects = obj_get_objects();
 
