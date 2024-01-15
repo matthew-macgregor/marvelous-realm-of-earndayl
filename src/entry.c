@@ -49,8 +49,8 @@ bool entry_has_trait(const Entry *entry, const char *trait) {
     return strcmp(entry->traits, trait) == 0;
 }
 
-const char *entry_get_description(const Entry *entry) {
-    return entry != NULL ? entry->description : "unknown";
+const char *entry_get_short_description(const Entry *entry) {
+    return entry != NULL ? entry->short_description : "unknown";
 }
 
 const char *entry_get_traits(const Entry *entry) {
@@ -103,7 +103,7 @@ static char *test_entry_get_by_location_id(void) {
 
 static char *test_entry_get_description_trait(void) {
     Entry *entry = entry_get_by_location_id(E_ENTRY_CAVE);
-    mu_assert("entry_get_description", strcmp(entry_get_description(entry), "a narrow cave with wet walls") == 0);
+    mu_assert("entry_get_short_description", strcmp(entry_get_short_description(entry), "a narrow cave with wet walls") == 0);
     mu_assert("entry_get_traits", strcmp(entry_get_traits(entry), "start") == 0);
     return 0;
 }

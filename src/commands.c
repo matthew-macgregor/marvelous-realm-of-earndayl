@@ -14,19 +14,19 @@ static bool cmd_look(void);
 static bool cmd_move(void);
 
 #define END_OF_COMMANDS { NULL, NULL }
+static const Command commands[] = {
+    { "quit",           cmd_quit        },
+    { "exit",           cmd_quit        },
+    { "q",              cmd_quit        },
+    { "bye",            cmd_quit        },
+    { "look",           cmd_look        },
+    { "look around",    cmd_look        },
+    { "look at A",      NULL            },
+    { "go A",           cmd_move        },
+    END_OF_COMMANDS
+};
 
 bool interpret_command(const char *input) {
-    static const Command commands[] = {
-        { "quit",           cmd_quit        },
-        { "exit",           cmd_quit        },
-        { "q",              cmd_quit        },
-        { "look",           cmd_look        },
-        { "look around",    cmd_look        },
-        { "look at A",      NULL            },
-        { "go A",           cmd_move        },
-        END_OF_COMMANDS
-    };
-
     const Command *matched_cmd;
     CapturedPhraseResult result = { 0, 0, false };
     for (const Command *cmd = commands; !result.matched && cmd->pattern != NULL; cmd++) {
@@ -72,7 +72,7 @@ static bool cmd_look(void) {
     location_id location = hero_get_location_id();
     Entry *entry = entry_get_by_location_id(location);
     if (entry != NULL) {
-        const char *description = entry_get_description(entry);
+        const char *description = entry_get_short_description(entry);
         printf("You are in %s.\n", description);
 
         cmd_look_objects();

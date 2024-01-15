@@ -9,7 +9,7 @@
 
 typedef struct Entry {
    const location_id id;
-   const char *description;
+   const char *short_description;
    const char *traits;
 } Entry;
 typedef Entry* EntryArrayPtr;
@@ -24,7 +24,7 @@ location_id entry_get_start_location_id(void);
 Entry *entry_search_by_trait(const char *trait);
 Entry *entry_get_by_location_id(location_id location_idx);
 bool entry_has_trait(const Entry *entry, const char *trait);
-const char *entry_get_description(const Entry *entry);
+const char *entry_get_short_description(const Entry *entry);
 const char *entry_get_traits(const Entry *entry);
 const char *entry_get_exits(const Entry *entry);
 
