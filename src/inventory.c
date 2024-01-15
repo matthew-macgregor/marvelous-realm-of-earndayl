@@ -1,12 +1,11 @@
 #include "inventory.h"
 
 extern inline bool inv_add_object_to_inventory(Object *obj) {
-    if (obj != NULL) {
-        obj->location = EP_INVENTORY;
-        return true;
-    }
+    return obj_move_object(obj, EP_INVENTORY);
+}
 
-    return false;
+extern inline bool inv_remove_object_from_inventory(Object *obj, Entry *entry) {
+    return obj_move_object(obj, entry);
 }
 
 #ifdef TEST
@@ -21,7 +20,7 @@ static char *test_inv_baseline(void) {
 }
 
 static char *test_inv_add_object_to_inventory(void) {
-    Entry *entry = entry_get_start_entry();
+    Entry *entry = entry_get_by_location_id(E_ENTRY_CAVE);
     Object obj = { 55, "a lantern", "rusty", entry };
     inv_add_object_to_inventory(&obj);
     mu_assert("inv_add_object_to_inventory", obj.location == EP_INVENTORY); 

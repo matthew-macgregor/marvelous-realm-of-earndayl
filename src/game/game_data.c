@@ -15,7 +15,7 @@ Connector connectors[] = {
 };
 
 Object objects[] = {
-    { O_RUSTY_DAGGER, "a rusty dagger", "rusty;dagger", EP_ENTRY_CAVE }
+    { O_RUSTY_DAGGER, "a rusty dagger", "rusty dagger", EP_ENTRY_CAVE }
 };
 
 #define ENTRY_COUNT (size_t)(sizeof entries / sizeof *entries)

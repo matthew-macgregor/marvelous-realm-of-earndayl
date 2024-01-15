@@ -7,7 +7,7 @@ typedef long object_id;
 
 typedef struct Object {
     object_id id;
-    char *description;
+    char *short_description;
     char *traits;
     Entry *location;
 } Object;
@@ -18,6 +18,7 @@ size_t obj_get_object_count(void);
 Object *obj_search_by_trait(const char *trait);
 Object *obj_search_by_trait_and_location_id(const char *trait, location_id loc);
 Object *obj_find_by_id(object_id id);
+bool obj_move_object(Object *obj, Entry *entry);
 
 /**
  * Notes

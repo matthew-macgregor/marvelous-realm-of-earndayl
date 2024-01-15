@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 #include "commands.h"
 #include "colors.h"
@@ -14,6 +15,7 @@ static bool cmd_unknown(const char *input);
 static bool cmd_look(void);
 static bool cmd_move(void);
 static bool cmd_get(void);
+static bool cmd_drop(void);
 
 #define END_OF_COMMANDS { NULL, NULL }
 static const Command commands[] = {
@@ -26,6 +28,8 @@ static const Command commands[] = {
     { "look at A",      NULL            },
     { "go A",           cmd_move        },
     { "get A",          cmd_get         },
+    { "inventory",      NULL            },
+    { "drop A",         cmd_drop        },
     END_OF_COMMANDS
 };
 
@@ -49,6 +53,27 @@ static bool cmd_unknown(const char *input) {
     return true;
 }
 
+static bool cmd_drop(void) {
+    Entry *here = hero_get_entry();
+    Entry *inventory = inv_get_inventory_entry();
+    const char *phrase = get_captured_phrase('A');
+    assert(here != NULL && inventory != NULL && *phrase != '\0');
+
+    Object *obj = obj_search_by_trait_and_location_id(phrase, inventory->id);
+    if (obj != NULL) {
+        // printf("You're in luck, '%s' is here.\n", phrase);
+        if (inv_remove_object_from_inventory(obj, here)) {
+            printf("You drop %s.", obj->short_description);
+        } else {
+            printf("You fail to drop the %s.\n", obj->short_description);
+        }
+    } else {
+        printf(CON_RED "Sorry, I don't see a '%s' to drop." CON_RESET, phrase);
+    }
+
+    return true;
+}
+
 static bool cmd_get(void) {
     Entry *here = hero_get_entry();
     Entry *inventory = inv_get_inventory_entry();
@@ -58,9 +83,9 @@ static bool cmd_get(void) {
     if (obj != NULL) {
         // printf("You're in luck, '%s' is here.\n", phrase);
         if (inv_add_object_to_inventory(obj)) {
-            printf("You pick up %s.", obj->description);
+            printf("You pick up %s.", obj->short_description);
         } else {
-            printf("You fail to get the %s.\n", obj->description);
+            printf("You fail to get the %s.\n", obj->short_description);
         }
     } else {
         printf(CON_RED "Sorry, no '%s' is here." CON_RESET, phrase);
@@ -79,7 +104,7 @@ static bool cmd_look_objects(void) {
     for (size_t i = 0; i < obj_count; i++) {
         Object obj = objects[i];
         if (obj.location == entry) {
-            printf("\n - %s", obj.description);
+            printf("\n - %s", obj.short_description);
             found_obj = true;
         }
     }

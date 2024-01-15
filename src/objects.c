@@ -43,8 +43,18 @@ Object *obj_find_by_id(object_id id) {
     return NULL;
 }
 
+extern inline bool obj_move_object(Object *obj, Entry *entry) {
+    if (obj != NULL) {
+        obj->location = entry;
+        return true;
+    }
+
+    return false;
+}
+
 #ifdef TEST
 #include "colors.h"
+#include "entry.h"
 #include "game/game_data.h"
 #include "minunit.h"
 #include "test_results.h"
@@ -60,9 +70,19 @@ static char *test_obj_search_by_trait_and_location_id(void) {
     return 0;
 }
 
+static char *test_obj_move_obj(void) {
+    Entry *entry = entry_get_by_location_id(E_ENTRY_CAVE);
+    Object obj = { 55, "a lantern", "rusty", entry };
+    bool result = obj_move_object(&obj, entry);
+    mu_assert("obj_move_object: result", result);
+    mu_assert("obj_move_object: location", obj.location == EP_ENTRY_CAVE);
+    return 0;
+}
+
 static char *objects_test_all_tests(void) {
     mu_run_test(test_obj_baseline);
     mu_run_test(test_obj_search_by_trait_and_location_id);
+    mu_run_test(test_obj_move_obj);
 
     // next test here
     return 0;
