@@ -12,16 +12,16 @@ Hero *hero_get_hero(void) {
     return &hero;
 }
 
-location_id hero_get_location_id(void) {
-    return hero.location != NULL ? hero.location->id : LOCATION_UNKNOWN;
+entry_id hero_get_entry_id(void) {
+    return hero.location != NULL ? hero.location->id : ENTRY_UNKNOWN;
 }
 
 Entry *hero_get_entry(void) {
     return hero.location != NULL ? hero.location : NULL;
 }
 
-bool hero_set_location_id(location_id new_loc_id) {
-    Entry *entry = entry_get_by_location_id(new_loc_id);
+bool hero_set_entry_id(entry_id new_loc_id) {
+    Entry *entry = entry_get_by_entry_id(new_loc_id);
     if (entry != NULL) {
         hero.location = entry;
         return true;

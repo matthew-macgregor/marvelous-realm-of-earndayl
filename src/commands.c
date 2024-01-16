@@ -59,7 +59,7 @@ static bool cmd_drop(void) {
     const char *phrase = get_captured_phrase('A');
     assert(here != NULL && inventory != NULL && *phrase != '\0');
 
-    Object *obj = obj_search_by_trait_and_location_id(phrase, inventory->id);
+    Object *obj = obj_search_by_trait_and_entry_id(phrase, inventory->id);
     if (obj != NULL) {
         // printf("You're in luck, '%s' is here.\n", phrase);
         if (inv_remove_object_from_inventory(obj, here)) {
@@ -79,7 +79,7 @@ static bool cmd_get(void) {
     Entry *inventory = inv_get_inventory_entry();
     (void)inventory;
     const char *phrase = get_captured_phrase('A');
-    Object *obj = obj_search_by_trait_and_location_id(phrase, here->id);
+    Object *obj = obj_search_by_trait_and_entry_id(phrase, here->id);
     if (obj != NULL) {
         // printf("You're in luck, '%s' is here.\n", phrase);
         if (inv_add_object_to_inventory(obj)) {
@@ -115,16 +115,16 @@ static bool cmd_look_objects(void) {
 
 static bool cmd_look(void) {
     // const Hero *hero = hero_get_hero();
-    location_id location = hero_get_location_id();
-    Entry *entry = entry_get_by_location_id(location);
+    entry_id location = hero_get_entry_id();
+    Entry *entry = entry_get_by_entry_id(location);
     if (entry != NULL) {
         const char *description = entry_get_short_description(entry);
-        printf("You are in %s.\n", description);
-
-        cmd_look_objects();
+        printf("You are in %s. ", description);
 
         const char *exits = entry_get_exits(entry);
-        printf("Exits: %s\n", exits);
+        printf("(%s)\n", exits);
+
+        cmd_look_objects();
     } else {
         printf("%s", "Not sure what you want to look at!");
     }
@@ -133,19 +133,19 @@ static bool cmd_look(void) {
 }
 
 static bool cmd_move(void) {
-    location_id location = hero_get_location_id();
-    Entry *entry = entry_get_by_location_id(location);
+    entry_id location = hero_get_entry_id();
+    Entry *entry = entry_get_by_entry_id(location);
     if (entry != NULL) {
         const char *phrase = get_captured_phrase('A');
         const Direction dir = direction_text_to_direction(phrase);
         const char *dir_text = direction_to_text(dir);
-        const location_id loc = connector_get_location_id_in_direction(entry, dir);
+        const entry_id loc = connector_get_location_id_in_direction(entry, dir);
 
-        if (loc == LOCATION_UNKNOWN) {
+        if (loc == ENTRY_UNKNOWN) {
             printf("You can't go '%s' from here.", dir_text);
         } else {
             printf("You move cautiously to the %s.\n", dir_text);
-            if (!hero_set_location_id(loc)) {
+            if (!hero_set_entry_id(loc)) {
                 printf("Yikes, something went wrong setting location.\n");
             } else {
                 cmd_look();

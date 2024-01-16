@@ -16,7 +16,7 @@ typedef Object* ObjectArrayPtr;
 ObjectArrayPtr obj_get_objects(void);
 size_t obj_get_object_count(void);
 Object *obj_search_by_trait(const char *trait);
-Object *obj_search_by_trait_and_location_id(const char *trait, location_id loc);
+Object *obj_search_by_trait_and_entry_id(const char *trait, entry_id loc);
 Object *obj_find_by_id(object_id id);
 bool obj_move_object(Object *obj, Entry *entry);
 

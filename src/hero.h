@@ -9,9 +9,9 @@ typedef struct Hero {
 
 Hero *hero_init(void);
 Hero *hero_get_hero(void);
-location_id hero_get_location_id(void);
+entry_id hero_get_entry_id(void);
 Entry *hero_get_entry(void);
-bool hero_set_location_id(location_id loc_id);
+bool hero_set_entry_id(entry_id loc_id);
 
 #ifdef TEST
 int hero_test_main(void);

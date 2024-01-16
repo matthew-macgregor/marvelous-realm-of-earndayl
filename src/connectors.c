@@ -13,10 +13,10 @@ extern Connector *connector_get_connector_in_direction(const Entry *current_loc,
     return NULL;
 }
 
-location_id connector_get_location_id_in_direction(const Entry *current_loc, const Direction direction) {
+entry_id connector_get_location_id_in_direction(const Entry *current_loc, const Direction direction) {
     Connector *conn = connector_get_connector_in_direction(current_loc, direction);
-    return conn == NULL             ?   LOCATION_UNKNOWN :
-           conn->entry_b == NULL    ?   LOCATION_UNKNOWN :
+    return conn == NULL             ?   ENTRY_UNKNOWN :
+           conn->entry_b == NULL    ?   ENTRY_UNKNOWN :
                                         conn->entry_b->id;
 }
 

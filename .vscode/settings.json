@@ -19,6 +19,7 @@
         "connectors.h": "c",
         "entries_test.h": "c",
         "game_data.h": "c",
-        "inventory.h": "c"
+        "inventory.h": "c",
+        "cstdlib": "c"
     }
 }

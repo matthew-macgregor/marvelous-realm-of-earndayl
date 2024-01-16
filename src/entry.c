@@ -14,9 +14,9 @@ Entry *entry_get_start_entry(void) {
     return entry_search_by_trait("start");
 }
 
-location_id entry_get_start_location_id(void) {
+entry_id entry_get_start_location_id(void) {
     Entry *entry = entry_get_start_entry();
-    return entry != NULL ? entry->id : LOCATION_UNKNOWN;
+    return entry != NULL ? entry->id : ENTRY_UNKNOWN;
 }
 
 Entry *entry_search_by_trait(const char *trait) {
@@ -32,11 +32,11 @@ Entry *entry_search_by_trait(const char *trait) {
     return NULL;
 }
 
-Entry *entry_get_by_location_id(location_id location_idx) {
+Entry *entry_get_by_entry_id(entry_id entry_id) {
     size_t entry_cnt = entry_get_entry_count();
     EntryArrayPtr entries = entry_get_entries();
     for (size_t i = 0; i < entry_cnt; i++) {
-        if (entries[i].id == location_idx) {
+        if (entries[i].id == entry_id) {
             return &entries[i];
         }
     }
@@ -63,10 +63,10 @@ const char *entry_get_exits(const Entry *entry) {
     exits[0] = '\0';
     bool at_least_one = false;
     for (Direction dir = 0; dir < 8; dir++) {
-        location_id loc = connector_get_location_id_in_direction(entry, dir);
-        if (loc > LOCATION_UNKNOWN) {
+        entry_id loc = connector_get_location_id_in_direction(entry, dir);
+        if (loc > ENTRY_UNKNOWN) {
             if (at_least_one) {
-                strncat(exits, " / ", 3);
+                strncat(exits, "/", 3);
             }
             char *exit_name = exit_letter_mapping[dir];
             strncat(exits, exit_name, strlen(exit_name));
@@ -96,22 +96,22 @@ static char *test_entry_count(void) {
     return 0;
 }
 
-static char *test_entry_get_by_location_id(void) {
-    mu_assert("entry_get_by_location", entry_has_trait(entry_get_by_location_id(E_ENTRY_CAVE), "start"));
+static char *test_entry_get_by_entry_id(void) {
+    mu_assert("entry_get_by_location", entry_has_trait(entry_get_by_entry_id(E_ENTRY_CAVE), "start"));
     return 0;
 }
 
 static char *test_entry_get_description_trait(void) {
-    Entry *entry = entry_get_by_location_id(E_ENTRY_CAVE);
+    Entry *entry = entry_get_by_entry_id(E_ENTRY_CAVE);
     mu_assert("entry_get_short_description", strcmp(entry_get_short_description(entry), "a narrow cave with wet walls") == 0);
     mu_assert("entry_get_traits", strcmp(entry_get_traits(entry), "start") == 0);
     return 0;
 }
 
 static char *test_entry_get_exits(void) {
-    Entry *entry = entry_get_by_location_id(E_ENTRY_CAVE);
-    mu_assert("entry_get_exits: E_ENTRY_CAVE", strcmp(entry_get_exits(entry), "E / W") == 0);
-    entry = entry_get_by_location_id(E_EASTERN_PASSAGE);
+    Entry *entry = entry_get_by_entry_id(E_ENTRY_CAVE);
+    mu_assert("entry_get_exits: E_ENTRY_CAVE", strcmp(entry_get_exits(entry), "E/W") == 0);
+    entry = entry_get_by_entry_id(E_EASTERN_PASSAGE);
     mu_assert("entry_get_exits: E_EASTERN_PASSAGE", strcmp(entry_get_exits(entry), "W") == 0);
     return 0;
 }
@@ -119,7 +119,7 @@ static char *test_entry_get_exits(void) {
 static char *entry_test_all_tests(void) {
     mu_run_test(test_search_by_trait);
     mu_run_test(test_entry_count);
-    mu_run_test(test_entry_get_by_location_id);
+    mu_run_test(test_entry_get_by_entry_id);
     mu_run_test(test_entry_get_description_trait);
     mu_run_test(test_entry_get_exits);
 

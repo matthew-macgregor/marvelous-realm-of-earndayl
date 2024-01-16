@@ -1,7 +1,6 @@
 #ifndef CONNECTORS_H
 #define CONNECTORS_H
 #include "directions.h"
-#include "location.h"
 #include "entry.h"
 
 typedef struct Connector {
@@ -14,7 +13,7 @@ typedef Connector* ConnectorArrayPtr;
 size_t connector_get_connector_count(void);
 ConnectorArrayPtr connector_get_connectors(void);
 Connector *connector_get_connector_in_direction(const Entry *current_loc, const Direction direction);
-location_id connector_get_location_id_in_direction(const Entry *current_loc, const Direction direction);
+entry_id connector_get_location_id_in_direction(const Entry *current_loc, const Direction direction);
 
 /**
  * Notes

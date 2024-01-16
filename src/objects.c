@@ -15,7 +15,7 @@ Object *obj_search_by_trait(const char *trait) {
     return NULL;
 }
 
-Object *obj_search_by_trait_and_location_id(const char *trait, location_id loc) {
+Object *obj_search_by_trait_and_entry_id(const char *trait, entry_id loc) {
     size_t count = obj_get_object_count();
     ObjectArrayPtr objects = obj_get_objects();
     for (size_t i = 0; i < count; i++) {
@@ -66,16 +66,16 @@ static char *test_obj_baseline(void) {
 }
 
 static char *test_obj_search_by_trait_and_location_id(void) {
-    mu_assert("obj_search_by_trait_and_location_id", obj_search_by_trait_and_location_id("rusty", E_ENTRY_CAVE) ==  &objects[0]);
+    mu_assert("obj_search_by_trait_and_location_id", obj_search_by_trait_and_entry_id("rusty", E_ENTRY_CAVE) ==  &objects[0]);
     return 0;
 }
 
 static char *test_obj_move_obj(void) {
-    Entry *entry = entry_get_by_location_id(E_ENTRY_CAVE);
+    Entry *entry = entry_get_by_entry_id(E_ENTRY_CAVE);
     Object obj = { 55, "a lantern", "rusty", entry };
     bool result = obj_move_object(&obj, entry);
     mu_assert("obj_move_object: result", result);
-    mu_assert("obj_move_object: location", obj.location == EP_ENTRY_CAVE);
+    mu_assert("obj_move_object: entry", obj.location == EP_ENTRY_CAVE);
     return 0;
 }
 
