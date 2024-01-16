@@ -27,7 +27,6 @@ build build/hero.o: cc src/hero.c
 build build/directions.o: cc src/directions.c
 build build/connectors.o: cc src/connectors.c
 build build/game/game_data.o: cc src/game/game_data.c
-build build/objects.o: cc src/objects.c
 build build/inventory.o: cc src/inventory.c
 build build/main: link $
     build/main.o $
@@ -38,7 +37,6 @@ build build/main: link $
     build/directions.o $
     build/connectors.o $
     build/game/game_data.o $
-    build/objects.o $
     build/inventory.o
 
 build test: phony build/test
@@ -60,8 +58,6 @@ build build/connectors_test.o: cc src/connectors.c
     cflags = $cflags_test
 build build/game/game_data_test.o: cc src/game/game_data.c
     cflags = $cflags_test
-build build/objects_test.o: cc src/objects.c
-    cflags = $cflags_test
 build build/inventory_test.o: cc src/inventory.c
     cflags = $cflags_test
 
@@ -75,7 +71,6 @@ build build/test: link $
     build/directions_test.o $
     build/connectors_test.o $
     build/game/game_data_test.o $
-    build/objects_test.o $
     build/inventory_test.o
 
 build run-test: run-test || test

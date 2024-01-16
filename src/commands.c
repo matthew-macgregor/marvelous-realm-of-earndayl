@@ -7,7 +7,6 @@
 #include "input_parser.h"
 #include "directions.h"
 #include "connectors.h"
-#include "objects.h"
 #include "inventory.h"
 
 static bool cmd_quit(void); // TODO
@@ -59,7 +58,7 @@ static bool cmd_drop(void) {
     const char *phrase = get_captured_phrase('A');
     assert(here != NULL && inventory != NULL && *phrase != '\0');
 
-    Object *obj = obj_search_by_trait_and_entry_id(phrase, inventory->id);
+    Entry *obj = entry_search_by_trait_and_entry_id(phrase, inventory->id);
     if (obj != NULL) {
         // printf("You're in luck, '%s' is here.\n", phrase);
         if (inv_remove_object_from_inventory(obj, here)) {
@@ -79,13 +78,13 @@ static bool cmd_get(void) {
     Entry *inventory = inv_get_inventory_entry();
     (void)inventory;
     const char *phrase = get_captured_phrase('A');
-    Object *obj = obj_search_by_trait_and_entry_id(phrase, here->id);
-    if (obj != NULL) {
+    Entry *entry = entry_search_by_trait_and_entry_id(phrase, here->id);
+    if (entry != NULL) {
         // printf("You're in luck, '%s' is here.\n", phrase);
-        if (inv_add_object_to_inventory(obj)) {
-            printf("You pick up %s.", obj->short_description);
+        if (inv_add_object_to_inventory(entry)) {
+            printf("You pick up %s.", entry->short_description);
         } else {
-            printf("You fail to get the %s.\n", obj->short_description);
+            printf("You fail to get the %s.\n", entry->short_description);
         }
     } else {
         printf(CON_RED "Sorry, no '%s' is here." CON_RESET, phrase);
@@ -95,15 +94,15 @@ static bool cmd_get(void) {
 }
 
 static bool cmd_look_objects(void) {
-    Entry *entry = hero_get_entry();
-    size_t obj_count = obj_get_object_count();
-    ObjectArrayPtr objects = obj_get_objects();
+    Entry *here = hero_get_entry();
+    size_t entry_count = entry_get_entry_count();
+    EntryArrayPtr entries = entry_get_entries();
 
     printf("You see: ");
     bool found_obj = false;
-    for (size_t i = 0; i < obj_count; i++) {
-        Object obj = objects[i];
-        if (obj.location == entry) {
+    for (size_t i = 0; i < entry_count; i++) {
+        Entry obj = entries[i];
+        if (obj.entry == here) {
             printf("\n - %s", obj.short_description);
             found_obj = true;
         }

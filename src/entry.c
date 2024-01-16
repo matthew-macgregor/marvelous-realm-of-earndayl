@@ -32,6 +32,21 @@ Entry *entry_search_by_trait(const char *trait) {
     return NULL;
 }
 
+Entry *entry_search_by_trait_and_entry_id(const char *trait, entry_id loc) {
+    size_t count = entry_get_entry_count();
+    EntryArrayPtr entries = entry_get_entries();
+    for (size_t i = 0; i < count; i++) {
+        Entry e = entries[i];
+        if (strstr(e.traits, trait) && 
+            e.entry != NULL && 
+            e.entry->id == loc) {
+            return &entries[i];
+        }
+    }
+
+    return NULL;
+}
+
 Entry *entry_get_by_entry_id(entry_id entry_id) {
     size_t entry_cnt = entry_get_entry_count();
     EntryArrayPtr entries = entry_get_entries();
@@ -76,6 +91,14 @@ const char *entry_get_exits(const Entry *entry) {
     return exits;
 }
 
+extern inline bool entry_assign_a_to_b(Entry *a, Entry *b) {
+    if (a != NULL) {
+        a->entry = b;
+        return true;
+    }
+    return false;
+}
+
 #ifdef TEST
 #include "colors.h"
 #include "minunit.h"
@@ -85,14 +108,29 @@ const char *entry_get_exits(const Entry *entry) {
 static char *test_search_by_trait(void) {
     EntryArrayPtr entries = entry_get_entries();
     mu_assert("search by trait 'start'", entry_search_by_trait("start") == EP_ENTRY_CAVE);
-    mu_assert("search by trait 'grotto'", entry_search_by_trait("grotto") == EP_EASTERN_PASSAGE);
+    mu_assert("search by trait 'passage'", entry_search_by_trait("passage") == EP_EASTERN_PASSAGE);
     mu_assert("search by trait 'bogus'", entry_search_by_trait("bogus") == NULL);
     return 0;
 }
 
+static char *test_entry_search_by_trait_and_location_id(void) {
+    mu_assert("entry_search_by_trait_and_location_id", entry_search_by_trait_and_entry_id("rotten", E_WESTERN_PASSAGE) == EP_ROTTEN_CHEST);
+    return 0;
+}
+
+static char *test_entry_move_entry(void) {
+    Entry *container = entry_get_by_entry_id(E_ENTRY_CAVE);
+    Entry contained = { 55, "a lantern", "rusty", NULL };
+    bool result = entry_assign_a_to_b(&contained, container);
+    mu_assert("entry_move_entry: result", result);
+    mu_assert("entry_move_entry: entry", contained.entry == EP_ENTRY_CAVE);
+    return 0;
+}
+
+
 static char *test_entry_count(void) {
     size_t entry_cnt = entry_get_entry_count();
-    mu_assert("entry count", entry_cnt == 4);
+    mu_assert("entry count", entry_cnt == 6);
     return 0;
 }
 
@@ -122,6 +160,8 @@ static char *entry_test_all_tests(void) {
     mu_run_test(test_entry_get_by_entry_id);
     mu_run_test(test_entry_get_description_trait);
     mu_run_test(test_entry_get_exits);
+    mu_run_test(test_entry_search_by_trait_and_location_id);
+    mu_run_test(test_entry_move_entry);
 
     // next test here
     return 0;

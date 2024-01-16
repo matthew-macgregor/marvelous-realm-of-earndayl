@@ -11,8 +11,9 @@ typedef struct Entry {
    const entry_id id;
    const char *short_description;
    const char *traits;
+   struct Entry *entry;
 } Entry;
-typedef Entry* EntryArrayPtr;
+typedef Entry *EntryArrayPtr;
 
 #define ENTRY_UNKNOWN ((entry_id)-1)
 
@@ -24,11 +25,30 @@ EntryArrayPtr entry_get_entries(void);
 Entry *entry_get_start_entry(void);
 entry_id entry_get_start_entry_id(void);
 Entry *entry_search_by_trait(const char *trait);
+Entry *entry_search_by_trait_and_entry_id(const char *trait, entry_id loc);
 Entry *entry_get_by_entry_id(entry_id location_idx);
+bool entry_assign_a_to_b(Entry *a, Entry *b);
 bool entry_has_trait(const Entry *entry, const char *trait);
 const char *entry_get_short_description(const Entry *entry);
 const char *entry_get_traits(const Entry *entry);
 const char *entry_get_exits(const Entry *entry);
+
+/**
+ * Notes
+ * -----
+ * An Entry is a generic entity that has several uses in the game:
+ * 
+ * 1. An Entry acts as a "location". Example: cavern, outhouse, etc.
+ * 2. As a "virtual" container, an Entry is a sort of subset of the concept
+ *    of a location. A chest can be in a cavern, and a rusty dagger can be in
+ *    a chest.
+ * 
+ *    Cavern [Entry] <- Chest [Entry] <- Rusty dagger [Entry]
+ * 
+ * 3. As a placeholder for anything which belongs in the game world, which
+ *    may be supplemented by data from another table.
+ * 
+ */
 
 #ifdef TEST
 extern int entry_test_main(void);

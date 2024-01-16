@@ -1,26 +1,23 @@
 #include "game/game_data.h"
 
 Entry entries[] = {
-   {E_INVENTORY, "your backpack", "inventory;backpack" },
-   {E_ENTRY_CAVE, "a narrow cave with wet walls", "start" },
-   {E_EASTERN_PASSAGE, "the eastern passage", "cave;grotto" },
-   {E_WESTERN_PASSAGE, "the western passage", "river;filthy" }
+    {E_INVENTORY, "your backpack", "inventory;backpack", NULL},
+    {E_ENTRY_CAVE, "a narrow cave with wet walls", "start", NULL},
+    {E_EASTERN_PASSAGE, "the eastern passage", "eastern passage", NULL},
+    {E_WESTERN_PASSAGE, "the western passage", "western passage", NULL},
+    {E_WESTERN_PASSAGE_CHEST, "a rotten chest", "rotten chest", EP_WESTERN_PASSAGE},
+    {E_RUSTY_DAGGER, "a rusty dagger", "rusty dagger", EP_ENTRY_CAVE }
 };
 
 Connector connectors[] = {
     { EP_ENTRY_CAVE, EAST, EP_EASTERN_PASSAGE },
     { EP_EASTERN_PASSAGE, WEST, EP_ENTRY_CAVE },
     { EP_ENTRY_CAVE, WEST, EP_WESTERN_PASSAGE },
-    { EP_WESTERN_PASSAGE, EAST, EP_ENTRY_CAVE }
-};
-
-Object objects[] = {
-    { O_RUSTY_DAGGER, "a rusty dagger", "rusty dagger", EP_ENTRY_CAVE }
+    { EP_WESTERN_PASSAGE, EAST, EP_ROTTEN_CHEST }
 };
 
 #define ENTRY_COUNT (size_t)(sizeof entries / sizeof *entries)
 #define CONNECTOR_COUNT (long)(sizeof connectors / sizeof *connectors)
-#define OBJECT_COUNT (long)(sizeof objects / sizeof *objects)
 
 extern inline size_t entry_get_entry_count(void) {
     return ENTRY_COUNT;
@@ -36,14 +33,6 @@ extern inline size_t connector_get_connector_count(void) {
 
 extern inline ConnectorArrayPtr connector_get_connectors(void) {
     return connectors;
-}
-
-extern inline size_t obj_get_object_count(void) {
-    return OBJECT_COUNT;
-}
-
-extern inline ObjectArrayPtr obj_get_objects(void) {
-    return objects;
 }
 
 /**
