@@ -1,12 +1,14 @@
 #include "game/game_data.h"
+#include "entry.h"
 
 Entry entries[] = {
-    {E_INVENTORY, "your backpack", "inventory;backpack", NULL},
-    {E_ENTRY_CAVE, "a narrow cave with wet walls", "start", NULL},
-    {E_EASTERN_PASSAGE, "the eastern passage", "eastern passage", NULL},
-    {E_WESTERN_PASSAGE, "the western passage", "western passage", NULL},
-    {E_ROTTEN_CHEST, "a rotten chest", "rotten chest", EP_WESTERN_PASSAGE},
-    {E_RUSTY_DAGGER, "a rusty dagger", "rusty dagger", EP_ROTTEN_CHEST }
+    // entry_id, short_description, traits, entry, heft,
+    {E_INVENTORY, "your backpack", "inventory;backpack", NULL, IS_STATIC},
+    {E_ENTRY_CAVE, "a narrow cave with wet walls", "start", NULL, IS_STATIC},
+    {E_EASTERN_PASSAGE, "the eastern passage", "eastern passage", NULL, IS_STATIC},
+    {E_WESTERN_PASSAGE, "the western passage", "western passage", NULL, IS_STATIC},
+    {E_ROTTEN_CHEST, "a rotten chest", "rotten chest", EP_WESTERN_PASSAGE, 25},
+    {E_RUSTY_DAGGER, "a rusty dagger", "rusty dagger", EP_ROTTEN_CHEST, 1}
 };
 
 Connector connectors[] = {

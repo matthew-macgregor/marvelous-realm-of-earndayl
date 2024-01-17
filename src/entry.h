@@ -12,10 +12,12 @@ typedef struct Entry {
    const char *short_description;
    const char *traits;
    struct Entry *entry;
+   int heft;
 } Entry;
 typedef Entry *EntryArrayPtr;
 
 #define ENTRY_UNKNOWN ((entry_id)-1)
+#define IS_STATIC     ((int)-1)
 
 // Defined in game/game_data.c
 size_t entry_get_entry_count(void);

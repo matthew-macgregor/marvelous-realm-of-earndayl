@@ -119,14 +119,21 @@ static bool cmd_get(void) {
     const char *phrase = get_captured_phrase('A');
     Entry *entry = entry_search_by_trait_and_entry_id(phrase, here->id);
     if (entry != NULL) {
-        // printf("You're in luck, '%s' is here.\n", phrase);
+        if (entry->heft == IS_STATIC) {
+            printf(CON_YELLOW "Do you really think you can lift that?" CON_RESET);
+            return true;
+        } else if (entry->heft > 20) { // TODO: 20 is arbitrary here
+            printf("Sorry, that's too much for you to carry.");
+            return true;
+        }
+
         if (inv_add_object_to_inventory(entry)) {
-            printf("You pick up %s.\n", entry->short_description);
+            printf("You pick up %s.", entry->short_description);
         } else {
-            printf("You fail to get the %s.\n", entry->short_description);
+            printf("You fail to get the %s.", entry->short_description);
         }
     } else {
-        printf(CON_RED "Sorry, no '%s' is here.\n" CON_RESET, phrase);
+        printf(CON_RED "Sorry, no '%s' is here." CON_RESET, phrase);
     }
 
     return true;

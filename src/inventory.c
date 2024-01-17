@@ -21,7 +21,7 @@ static char *test_inv_baseline(void) {
 
 static char *test_inv_add_object_to_inventory(void) {
     Entry *entry = entry_get_by_entry_id(E_ENTRY_CAVE);
-    Entry obj = { 55, "a lantern", "rusty", entry };
+    Entry obj = { 55, "a lantern", "rusty", entry, 1 };
     inv_add_object_to_inventory(&obj);
     mu_assert("inv_add_object_to_inventory", obj.entry == EP_INVENTORY); 
     return 0;
