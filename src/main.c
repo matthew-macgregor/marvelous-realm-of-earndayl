@@ -25,9 +25,9 @@ static bool get_input(char *input) {
 
 int main(void) {
     static char input[INPUT_MAX_LENGTH];
-    printf(CON_BLUE   "%s\n" CON_RESET, "------------------------------------------");
+    printf(CON_BLUE   "%s\n" CON_RESET, HL);
     printf(CON_YELLOW "%s\n" CON_RESET, "Welcome to the Marvelous Realm of Eärndayl");
-    printf(CON_BLUE   "%s\n" CON_RESET, "------------------------------------------");
+    printf(CON_BLUE   "%s\n" CON_RESET, HL);
 
     bool result = true;
     hero_init();

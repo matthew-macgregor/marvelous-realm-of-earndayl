@@ -5,15 +5,15 @@ Entry entries[] = {
     {E_ENTRY_CAVE, "a narrow cave with wet walls", "start", NULL},
     {E_EASTERN_PASSAGE, "the eastern passage", "eastern passage", NULL},
     {E_WESTERN_PASSAGE, "the western passage", "western passage", NULL},
-    {E_WESTERN_PASSAGE_CHEST, "a rotten chest", "rotten chest", EP_WESTERN_PASSAGE},
-    {E_RUSTY_DAGGER, "a rusty dagger", "rusty dagger", EP_ENTRY_CAVE }
+    {E_ROTTEN_CHEST, "a rotten chest", "rotten chest", EP_WESTERN_PASSAGE},
+    {E_RUSTY_DAGGER, "a rusty dagger", "rusty dagger", EP_ROTTEN_CHEST }
 };
 
 Connector connectors[] = {
     { EP_ENTRY_CAVE, EAST, EP_EASTERN_PASSAGE },
     { EP_EASTERN_PASSAGE, WEST, EP_ENTRY_CAVE },
     { EP_ENTRY_CAVE, WEST, EP_WESTERN_PASSAGE },
-    { EP_WESTERN_PASSAGE, EAST, EP_ROTTEN_CHEST }
+    { EP_WESTERN_PASSAGE, EAST, EP_ENTRY_CAVE }
 };
 
 #define ENTRY_COUNT (size_t)(sizeof entries / sizeof *entries)

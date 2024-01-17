@@ -108,6 +108,7 @@ extern CapturedPhraseResult parse_pattern(const char *input, const char *pattern
     result.matched = false;
 
     int matched_count = 0;
+    int mismatched_count = 0;
 
     // Loop through each token from the input and the pattern. Every token should match, unless:
     // 
@@ -131,9 +132,15 @@ extern CapturedPhraseResult parse_pattern(const char *input, const char *pattern
                     did_match_at_least_one = true;
                 }
 
-                if (did_match_at_least_one) result.captured_phrase_count++;
+                if (did_match_at_least_one) {
+                    result.captured_phrase_count++;
+                } else {
+                    mismatched_count++;
+                }
                 pattern_tok = next_pattern_tok;
                 continue;
+            } else {
+                mismatched_count++;
             }
         } else {
             // Tokens do match.
@@ -148,8 +155,7 @@ extern CapturedPhraseResult parse_pattern(const char *input, const char *pattern
     free(input_copy);
     free(pattern_copy);
 
-    result.matched = matched_count > 0 
-        && result.captured_phrase_count == result.placeholder_count;
+    result.matched = matched_count > 0 && mismatched_count == 0;
     return result;
 }
 
@@ -237,6 +243,19 @@ static char *test_parse_pattern(void) {
     mu_assert("parse_pattern: golden axe", strcmp(get_capture_buffer_by_letter('A'), "golden axe") == 0);
     mu_assert("parse_pattern: orc", strcmp(get_capture_buffer_by_letter('B'), "green orc") == 0);
     mu_assert("parse_pattern: get golden axe from green orc", get_captured_phrase_count() == 2);
+
+    result = parse_pattern("look in chest", "look in A");
+    mu_assert("parse_pattern: captured_phrase_count", result.captured_phrase_count = 1);
+    mu_assert("parse_pattern: placeholder_count", result.placeholder_count == 1);
+    mu_assert("parse_pattern: chest", strcmp(get_capture_buffer_by_letter('A'), "chest") == 0);
+    mu_assert("parse_pattern: look in chest", get_captured_phrase_count() == 1);
+
+    result = parse_pattern("look in chest", "look at A");
+    mu_assert("parse_pattern: captured_phrase_count", result.captured_phrase_count = 1);
+    mu_assert("parse_pattern: placeholder_count", result.placeholder_count == 1);
+    mu_assert("parse_pattern: matched", result.matched == false);
+    mu_assert("parse_pattern: chest", strcmp(get_capture_buffer_by_letter('A'), "chest") == 0);
+    mu_assert("parse_pattern: look at chest", get_captured_phrase_count() == 1);
     return 0;
 }
 

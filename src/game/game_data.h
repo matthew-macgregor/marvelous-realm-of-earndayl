@@ -11,7 +11,6 @@ extern Connector connectors[];
 #define E_ENTRY_CAVE                100
 #define E_EASTERN_PASSAGE           101
 #define E_WESTERN_PASSAGE           102
-#define E_WESTERN_PASSAGE_CHEST     103
 
 // Objects
 #define E_ROTTEN_CHEST              1000

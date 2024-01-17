@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "commands.h"
 #include "colors.h"
+#include "constants.h"
 #include "entry.h"
 #include "hero.h"
 #include "input_parser.h"
@@ -9,12 +10,15 @@
 #include "connectors.h"
 #include "inventory.h"
 
-static bool cmd_quit(void); // TODO
-static bool cmd_unknown(const char *input);
-static bool cmd_look(void);
-static bool cmd_move(void);
-static bool cmd_get(void);
 static bool cmd_drop(void);
+static bool cmd_empty(void);
+static bool cmd_get(void);
+static bool cmd_inventory(void);
+static bool cmd_look(void);
+static bool cmd_look_in(void);
+static bool cmd_move(void);
+static bool cmd_quit(void);
+static bool cmd_unknown(const char *input);
 
 #define END_OF_COMMANDS { NULL, NULL }
 static const Command commands[] = {
@@ -22,12 +26,14 @@ static const Command commands[] = {
     { "exit",           cmd_quit        },
     { "q",              cmd_quit        },
     { "bye",            cmd_quit        },
-    { "look",           cmd_look        },
-    { "look around",    cmd_look        },
+    { "empty A",        cmd_empty       },
+    { "look in A",      cmd_look_in     },
     { "look at A",      NULL            },
+    { "look around",    cmd_look        },
+    { "look",           cmd_look        },
     { "go A",           cmd_move        },
     { "get A",          cmd_get         },
-    { "inventory",      NULL            },
+    { "inventory",      cmd_inventory   },
     { "drop A",         cmd_drop        },
     END_OF_COMMANDS
 };
@@ -42,6 +48,11 @@ bool interpret_command(const char *input) {
 
     if (!result.matched) {
         return cmd_unknown(input);
+    }
+
+    if (matched_cmd->function == NULL) {
+        printf(CON_RED "Sorry, I can't help you '%s'.\n", input);
+        return true;
     }
 
     return matched_cmd->function != NULL ? (*matched_cmd->function)() : false;
@@ -73,23 +84,70 @@ static bool cmd_drop(void) {
     return true;
 }
 
+static bool cmd_empty(void) {
+    // TODO: routine here is very close to cmd_look_in. DRY?
+    Entry *here = hero_get_entry();
+    size_t entry_count = entry_get_entry_count();
+    EntryArrayPtr entries = entry_get_entries();
+    const char *phrase = get_captured_phrase('A');
+    Entry *container = entry_search_by_trait_and_entry_id(phrase, here->id);
+    if (container == NULL) {
+        printf("You don't see a %s here.\n", phrase);
+        return true;
+    }
+
+    for (size_t i = 0; i < entry_count; i++) {
+        Entry obj = entries[i];
+        int emptied_count = 0;
+        if (obj.entry == container) {
+            (&entries[i])->entry = here;
+            // If the item's location is the container, it's in the container.
+            printf(
+                "%sYou remove %s from %s.",
+                emptied_count > 0 ? "\n" : "",
+                obj.short_description,
+                container->short_description);
+            emptied_count++;
+        }
+    }
+
+    return true;
+}
+
 static bool cmd_get(void) {
     Entry *here = hero_get_entry();
-    Entry *inventory = inv_get_inventory_entry();
-    (void)inventory;
     const char *phrase = get_captured_phrase('A');
     Entry *entry = entry_search_by_trait_and_entry_id(phrase, here->id);
     if (entry != NULL) {
         // printf("You're in luck, '%s' is here.\n", phrase);
         if (inv_add_object_to_inventory(entry)) {
-            printf("You pick up %s.", entry->short_description);
+            printf("You pick up %s.\n", entry->short_description);
         } else {
             printf("You fail to get the %s.\n", entry->short_description);
         }
     } else {
-        printf(CON_RED "Sorry, no '%s' is here." CON_RESET, phrase);
+        printf(CON_RED "Sorry, no '%s' is here.\n" CON_RESET, phrase);
     }
 
+    return true;
+}
+
+static bool cmd_inventory(void) {
+    Entry *inventory = inv_get_inventory_entry();
+    EntryArrayPtr entries = entry_get_entries();
+    size_t entry_count = entry_get_entry_count();
+
+    printf("Inventory ");
+    bool found_obj = false;
+    for (size_t i = 0; i < entry_count; i++) {
+        Entry obj = entries[i];
+        if (obj.entry == inventory) {
+            printf("\n - %s", obj.short_description);
+            found_obj = true;
+        }
+    }
+
+    found_obj ? printf("\n"): printf("is %s%s" CON_RESET, CON_YELLOW, "empty.\n");
     return true;
 }
 
@@ -98,17 +156,20 @@ static bool cmd_look_objects(void) {
     size_t entry_count = entry_get_entry_count();
     EntryArrayPtr entries = entry_get_entries();
 
-    printf("You see: ");
     bool found_obj = false;
     for (size_t i = 0; i < entry_count; i++) {
         Entry obj = entries[i];
         if (obj.entry == here) {
-            printf("\n - %s", obj.short_description);
+            printf("%sYou see %s here.",
+                found_obj ? "\n" : "",
+                obj.short_description);
             found_obj = true;
         }
     }
 
-    found_obj ? printf("\n") : printf("nothing.\n");
+    if (found_obj == false) {
+        printf("You see nothing very interesting here.");
+    }
     return true;
 }
 
@@ -128,6 +189,34 @@ static bool cmd_look(void) {
         printf("%s", "Not sure what you want to look at!");
     }
 
+    return true;
+}
+
+static bool cmd_look_in(void) {
+    Entry *here = hero_get_entry();
+    size_t entry_count = entry_get_entry_count();
+    EntryArrayPtr entries = entry_get_entries();
+    const char *phrase = get_captured_phrase('A');
+    Entry *container = entry_search_by_trait_and_entry_id(phrase, here->id);
+    if (container == NULL) {
+        printf("You don't see a %s here.\n", phrase);
+        return true;
+    }
+
+    bool found_obj = false;
+    printf("In %s, you see:", container->short_description);
+    for (size_t i = 0; i < entry_count; i++) {
+        Entry obj = entries[i];
+        if (obj.entry == container) {
+            // If the item's location is the container, it's in the container.
+            printf("\n - %s", obj.short_description);
+            found_obj = true;
+        }
+    }
+
+    found_obj ? 
+        printf("\n(Hint: try the 'empty' command on %s!)\n", container->short_description) : 
+        printf("nothing.\n");
     return true;
 }
 

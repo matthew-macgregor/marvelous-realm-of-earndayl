@@ -3,4 +3,6 @@
 
 #define INPUT_MAX_LENGTH 100
 
+#define HL "------------------------------------------"
+
 #endif
