@@ -118,11 +118,13 @@ static bool cmd_get(void) {
     Entry *here = hero_get_entry();
     const char *phrase = get_captured_phrase('A');
     Entry *entry = entry_search_by_trait_and_entry_id(phrase, here->id);
+    const int encumbrance = inv_get_encumbrance();
+
     if (entry != NULL) {
         if (entry->heft == IS_STATIC) {
             printf(CON_YELLOW "Do you really think you can lift that?" CON_RESET);
             return true;
-        } else if (entry->heft > 20) { // TODO: 20 is arbitrary here
+        } else if (entry->heft + encumbrance > 20) { // TODO: 20 is arbitrary here
             printf("Sorry, that's too much for you to carry.");
             return true;
         }

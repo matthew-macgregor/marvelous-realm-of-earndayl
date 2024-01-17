@@ -8,6 +8,20 @@ extern inline bool inv_remove_object_from_inventory(Entry *obj, Entry *entry) {
     return entry_assign_a_to_b(obj, entry);
 }
 
+int inv_get_encumbrance(void) {
+    EntryArrayPtr entries = entry_get_entries();
+    size_t entry_count = entry_get_entry_count();
+    int encumbrance = 0;
+    for (size_t i = 0; i < entry_count; i++) {
+        Entry entry = entries[i];
+        if (inv_contains_entry(&entry) && entry.heft >= 0) {
+            encumbrance += entry.heft;
+        }
+    }
+
+    return encumbrance;
+}
+
 #ifdef TEST
 #include "colors.h"
 #include "minunit.h"

@@ -7,7 +7,7 @@ Entry entries[] = {
     {E_ENTRY_CAVE, "a narrow cave with wet walls", "start", NULL, IS_STATIC},
     {E_EASTERN_PASSAGE, "the eastern passage", "eastern passage", NULL, IS_STATIC},
     {E_WESTERN_PASSAGE, "the western passage", "western passage", NULL, IS_STATIC},
-    {E_ROTTEN_CHEST, "a rotten chest", "rotten chest", EP_WESTERN_PASSAGE, 25},
+    {E_ROTTEN_CHEST, "a rotten chest", "rotten chest", EP_WESTERN_PASSAGE, 20},
     {E_RUSTY_DAGGER, "a rusty dagger", "rusty dagger", EP_ROTTEN_CHEST, 1}
 };
 
