@@ -120,7 +120,8 @@ static char *test_entry_search_by_trait_and_location_id(void) {
 
 static char *test_entry_move_entry(void) {
     Entry *container = entry_get_by_entry_id(E_ENTRY_CAVE);
-    Entry contained = { 55, "a lantern", "rusty", NULL, 1};
+    Range r = {1, 2};
+    Entry contained = { 55, "a lantern", "rusty", NULL, 1, &r};
     bool result = entry_assign_a_to_b(&contained, container);
     mu_assert("entry_move_entry: result", result);
     mu_assert("entry_move_entry: entry", contained.entry == EP_ENTRY_CAVE);

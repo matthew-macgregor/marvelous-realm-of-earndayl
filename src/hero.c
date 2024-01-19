@@ -3,6 +3,15 @@
 
 static Hero hero;
 
+bool hero_arm_weapon(Weapon *weapon) {
+    if (weapon->damage != NULL) {
+        hero.armed_weapon = weapon;
+        return true;
+    }
+
+    return false;
+}
+
 Hero *hero_init(void) {
     hero.location = entry_get_start_entry();
     return &hero;

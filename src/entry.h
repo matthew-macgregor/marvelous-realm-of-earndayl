@@ -6,6 +6,11 @@
 #include <stdbool.h>
 #include "directions.h"
 
+typedef struct Range {
+   int min;
+   int max;
+} Range;
+
 typedef long entry_id;
 typedef struct Entry {
    const entry_id id;
@@ -13,6 +18,7 @@ typedef struct Entry {
    const char *traits;
    struct Entry *entry;
    int heft;
+   Range *damage;
 } Entry;
 typedef Entry *EntryArrayPtr;
 

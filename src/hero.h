@@ -2,9 +2,11 @@
 #define HERO_H
 
 #include "entry.h"
+typedef Entry Weapon;
 
 typedef struct Hero {
-    Entry* location;
+    Entry *location;
+    Weapon *armed_weapon;
 } Hero;
 
 Hero *hero_init(void);
@@ -12,6 +14,7 @@ Hero *hero_get_hero(void);
 entry_id hero_get_entry_id(void);
 Entry *hero_get_entry(void);
 bool hero_set_entry_id(entry_id loc_id);
+bool hero_arm_weapon(Weapon *weapon);
 
 #ifdef TEST
 int hero_test_main(void);

@@ -17,24 +17,26 @@ static bool cmd_inventory(void);
 static bool cmd_look(void);
 static bool cmd_look_in(void);
 static bool cmd_move(void);
+static bool cmd_ready_weapon(void);
 static bool cmd_quit(void);
 static bool cmd_unknown(const char *input);
 
 #define END_OF_COMMANDS { NULL, NULL }
 static const Command commands[] = {
-    { "quit",           cmd_quit        },
-    { "exit",           cmd_quit        },
-    { "q",              cmd_quit        },
-    { "bye",            cmd_quit        },
-    { "empty A",        cmd_empty       },
-    { "look in A",      cmd_look_in     },
-    { "look at A",      NULL            },
-    { "look around",    cmd_look        },
-    { "look",           cmd_look        },
-    { "go A",           cmd_move        },
-    { "get A",          cmd_get         },
-    { "inventory",      cmd_inventory   },
-    { "drop A",         cmd_drop        },
+    { "quit",           cmd_quit         },
+    { "exit",           cmd_quit         },
+    { "q",              cmd_quit         },
+    { "bye",            cmd_quit         },
+    { "empty A",        cmd_empty        },
+    { "look in A",      cmd_look_in      },
+    { "look at A",      NULL             },
+    { "look around",    cmd_look         },
+    { "look",           cmd_look         },
+    { "go A",           cmd_move         },
+    { "get A",          cmd_get          },
+    { "inventory",      cmd_inventory    },
+    { "drop A",         cmd_drop         },
+    { "arm A",          cmd_ready_weapon },
     END_OF_COMMANDS
 };
 
@@ -142,6 +144,7 @@ static bool cmd_get(void) {
 }
 
 static bool cmd_inventory(void) {
+    Hero *hero = hero_get_hero();
     Entry *inventory = inv_get_inventory_entry();
     EntryArrayPtr entries = entry_get_entries();
     size_t entry_count = entry_get_entry_count();
@@ -149,9 +152,10 @@ static bool cmd_inventory(void) {
     printf("Inventory ");
     bool found_obj = false;
     for (size_t i = 0; i < entry_count; i++) {
-        Entry obj = entries[i];
-        if (obj.entry == inventory) {
-            printf("\n - %s", obj.short_description);
+        Entry *obj = &entries[i];
+        if (obj->entry == inventory) {
+            char *armed = obj == hero->armed_weapon ? "(ARMED)" : "";
+            printf("\n - %s %s", obj->short_description, armed);
             found_obj = true;
         }
     }
@@ -250,6 +254,22 @@ static bool cmd_move(void) {
         }
     } else {
         printf(CON_RED "%s\n" CON_RESET, "You may have gotten lost.");
+    }
+
+    return true;
+}
+
+static bool cmd_ready_weapon(void) {
+    const char *phrase = get_captured_phrase('A');
+    Entry *entry = entry_search_by_trait(phrase);
+    if (entry == NULL || entry->entry != EP_INVENTORY) {
+        printf(CON_RED "Could not find %s to ready." CON_RESET, phrase);
+    } else {
+        if (hero_arm_weapon(entry)) {
+            printf(CON_GREEN "You have %s at the ready." CON_RESET, phrase);
+        } else {
+            printf(CON_RED "You can't fight with something like %s." CON_RESET, phrase);
+        }
     }
 
     return true;
