@@ -120,7 +120,7 @@ static char *test_entry_search_by_trait_and_location_id(void) {
 
 static char *test_entry_move_entry(void) {
     Entry *container = entry_get_by_entry_id(E_ENTRY_CAVE);
-    Range r = {1, 2};
+    DiceRoll r = {1, 2, 0, 1};
     Entry contained = { 55, "a lantern", "rusty", NULL, 1, &r};
     bool result = entry_assign_a_to_b(&contained, container);
     mu_assert("entry_move_entry: result", result);
@@ -131,7 +131,7 @@ static char *test_entry_move_entry(void) {
 
 static char *test_entry_count(void) {
     size_t entry_cnt = entry_get_entry_count();
-    mu_assert("entry count", entry_cnt == 6);
+    mu_assert("entry count", entry_cnt == 7);
     return 0;
 }
 

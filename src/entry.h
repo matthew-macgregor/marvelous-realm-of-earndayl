@@ -5,11 +5,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "directions.h"
-
-typedef struct Range {
-   int min;
-   int max;
-} Range;
+#include "dice.h"
 
 typedef long entry_id;
 typedef struct Entry {
@@ -18,7 +14,7 @@ typedef struct Entry {
    const char *traits;
    struct Entry *entry;
    int heft;
-   Range *damage;
+   DiceRoll *damage;
 } Entry;
 typedef Entry *EntryArrayPtr;
 

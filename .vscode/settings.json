@@ -21,6 +21,8 @@
         "game_data.h": "c",
         "inventory.h": "c",
         "cstdlib": "c",
-        "chrono": "c"
+        "chrono": "c",
+        "colors.h": "c",
+        "dice.h": "c"
     }
 }

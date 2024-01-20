@@ -1,7 +1,8 @@
 #include "game/game_data.h"
 #include "entry.h"
+#include "dice.h"
 
-Range range_1d2 = { 1, 2 };
+DiceRoll range_1d2 = dice_new_die(1, 2);
 
 Entry entries[] = {
     // entry_id, short_description, traits, entry, heft, damage (min, max)
@@ -10,7 +11,8 @@ Entry entries[] = {
     {E_EASTERN_PASSAGE, "the eastern passage", "eastern passage", NULL, IS_STATIC, NULL},
     {E_WESTERN_PASSAGE, "the western passage", "western passage", NULL, IS_STATIC, NULL},
     {E_ROTTEN_CHEST, "a rotten chest", "rotten chest", EP_WESTERN_PASSAGE, 20, NULL},
-    {E_RUSTY_DAGGER, "a rusty dagger", "rusty dagger", EP_ROTTEN_CHEST, 1, &range_1d2}
+    {E_RUSTY_DAGGER, "a rusty dagger", "rusty dagger", EP_ROTTEN_CHEST, 1, &range_1d2},
+    {E_COPPER_PENNY, "a copper penny", "copper penny", EP_ENTRY_CAVE, 0, NULL}
 };
 
 Connector connectors[] = {

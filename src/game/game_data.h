@@ -15,6 +15,7 @@ extern Connector connectors[];
 // Objects
 #define E_ROTTEN_CHEST              1000
 #define E_RUSTY_DAGGER              1001
+#define E_COPPER_PENNY              1002
 
 // Entry Pointers (EP): Used internally to reference the entries directly
 #define EP_INVENTORY                (entries + 0)
