@@ -14,6 +14,9 @@ bool hero_arm_weapon(Weapon *weapon) {
 
 Hero *hero_init(void) {
     hero.location = entry_get_start_entry();
+    hero.purse.copper = 0;
+    hero.purse.silver = 0;
+    hero.purse.gold = 0;
     return &hero;
 }
 

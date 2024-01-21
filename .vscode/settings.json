@@ -23,6 +23,8 @@
         "cstdlib": "c",
         "chrono": "c",
         "colors.h": "c",
-        "dice.h": "c"
+        "dice.h": "c",
+        "sample.h": "c",
+        "treasure.h": "c"
     }
 }

@@ -1,12 +1,14 @@
 #ifndef HERO_H
 #define HERO_H
-
 #include "entry.h"
+#include "treasure.h"
+
 typedef Entry Weapon;
 
 typedef struct Hero {
     Entry *location;
     Weapon *armed_weapon;
+    Coins purse;
 } Hero;
 
 Hero *hero_init(void);

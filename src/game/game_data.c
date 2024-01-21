@@ -1,5 +1,4 @@
 #include "game/game_data.h"
-#include "entry.h"
 #include "dice.h"
 
 DiceRoll range_1d2 = dice_new_die(1, 2);
@@ -22,8 +21,13 @@ Connector connectors[] = {
     { EP_WESTERN_PASSAGE, EAST, EP_ENTRY_CAVE }
 };
 
+EntryValue treasures[] = {
+    { E_COPPER_PENNY, EP_COPPER_PENNY, {1,0,0} }
+};
+
 #define ENTRY_COUNT (size_t)(sizeof entries / sizeof *entries)
-#define CONNECTOR_COUNT (long)(sizeof connectors / sizeof *connectors)
+#define CONNECTOR_COUNT (size_t)(sizeof connectors / sizeof *connectors)
+#define ENTRY_VALUE_COUNT (size_t)(sizeof treasures / sizeof *treasures)
 
 extern inline size_t entry_get_entry_count(void) {
     return ENTRY_COUNT;
@@ -39,6 +43,14 @@ extern inline size_t connector_get_connector_count(void) {
 
 extern inline ConnectorArrayPtr connector_get_connectors(void) {
     return connectors;
+}
+
+extern inline size_t treasure_get_treasures_count(void) {
+    return ENTRY_VALUE_COUNT;
+}
+
+extern inline EntryValueArrayPtr treasure_get_treasures(void) {
+    return treasures;
 }
 
 /**

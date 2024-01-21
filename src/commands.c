@@ -3,6 +3,7 @@
 #include "commands.h"
 #include "colors.h"
 #include "constants.h"
+#include "debug.h"
 #include "entry.h"
 #include "hero.h"
 #include "input_parser.h"
@@ -21,6 +22,10 @@ static bool cmd_ready_weapon(void);
 static bool cmd_quit(void);
 static bool cmd_unknown(const char *input);
 
+#ifdef DEBUG
+static bool cmd_debug_value(void);
+#endif
+
 #define END_OF_COMMANDS { NULL, NULL }
 static const Command commands[] = {
     { "quit",           cmd_quit         },
@@ -37,6 +42,9 @@ static const Command commands[] = {
     { "inventory",      cmd_inventory    },
     { "drop A",         cmd_drop         },
     { "arm A",          cmd_ready_weapon },
+#ifdef DEBUG
+    { "debug value A",  cmd_debug_value  },
+#endif
     END_OF_COMMANDS
 };
 
@@ -234,8 +242,7 @@ static bool cmd_look_in(void) {
 }
 
 static bool cmd_move(void) {
-    entry_id location = hero_get_entry_id();
-    Entry *entry = entry_get_by_entry_id(location);
+    Entry *entry = hero_get_entry();
     if (entry != NULL) {
         const char *phrase = get_captured_phrase('A');
         const Direction dir = direction_text_to_direction(phrase);
@@ -279,3 +286,25 @@ static bool cmd_quit(void) {
     printf("%s\n", "Okay, bye!");
     return false;
 }
+
+#ifdef DEBUG
+static bool cmd_debug_value(void) {
+    const char *phrase = get_captured_phrase('A');
+    Entry *entry = entry_search_by_trait(phrase);
+    if (entry == NULL) {
+        printf("Debug: can't find '%s'", phrase);
+        return true;
+    }
+    EntryValue *value = treasure_get_value(entry);
+    if (value == NULL) {
+        printf("Debug: no value for '%s'", phrase);
+        return true;
+    }
+
+    DEBUG_PRINTF(CON_CYAN "Debug::Gold: %d\n" CON_RESET, value->coins.gold);
+    DEBUG_PRINTF(CON_CYAN "Debug::Siver: %d\n" CON_RESET, value->coins.silver);
+    DEBUG_PRINTF(CON_CYAN "Debug::Copper: %d\n" CON_RESET, value->coins.copper);
+
+    return true;
+}
+#endif

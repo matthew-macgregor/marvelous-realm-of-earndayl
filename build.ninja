@@ -1,4 +1,4 @@
-cflags = -Wall -Werror -Wextra -ansi -pedantic -std=c99 -fsanitize=address,undefined
+cflags = -Wall -Werror -Wextra -ansi -pedantic -std=c99 -fsanitize=address,undefined -DDEBUG
 headers = -Isrc
 
 cflags_test = -Itest $cflags -DTEST
@@ -29,6 +29,7 @@ build build/connectors.o: cc src/connectors.c
 build build/game/game_data.o: cc src/game/game_data.c
 build build/inventory.o: cc src/inventory.c
 build build/dice.o: cc src/dice.c
+build build/treasure.o: cc src/treasure.c
 build build/main: link $
     build/main.o $
     build/input_parser.o $
@@ -39,7 +40,8 @@ build build/main: link $
     build/connectors.o $
     build/game/game_data.o $
     build/inventory.o $
-    build/dice.o
+    build/dice.o $
+    build/treasure.o
 
 build test: phony build/test
 build build/test.o: cc test/test.c
@@ -64,6 +66,8 @@ build build/inventory_test.o: cc src/inventory.c
     cflags = $cflags_test
 build build/dice_test.o: cc src/dice.c
     cflags = $cflags_test
+build build/treasure_test.o: cc src/treasure.c
+    cflags = $cflags_test
 
 build build/test: link $
     build/test.o $
@@ -76,7 +80,8 @@ build build/test: link $
     build/connectors_test.o $
     build/game/game_data_test.o $
     build/inventory_test.o $
-    build/dice_test.o
+    build/dice_test.o $
+    build/treasure_test.o
 
 build run-test: run-test || test
 
