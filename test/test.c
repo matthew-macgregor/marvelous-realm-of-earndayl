@@ -61,4 +61,5 @@ int main(void) {
         || treasure_test_main();
     fprintf(stderr, CON_MAGENTA "Result: %s\n" CON_RESET, result == 0 ? "Ok" : "Failed");
     fprintf(stderr, CON_MAGENTA "Tests run: %d\n" CON_RESET, tests_run);
+    return result;
 }

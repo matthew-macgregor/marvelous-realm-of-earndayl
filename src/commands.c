@@ -283,7 +283,7 @@ static bool cmd_ready_weapon(void) {
 }
 
 static bool cmd_quit(void) {
-    printf("%s\n", "Okay, bye!");
+    printf(CON_YELLOW "%s\n" CON_RESET, "Okay, bye!");
     return false;
 }
 

@@ -12,7 +12,7 @@ rule link
     command = gcc $in -o $out -g -fsanitize=address,undefined
 
 rule run-test
-    command = build/test # > /dev/null
+    command = build/test > /dev/null
 
 rule run-main
     command = build/main

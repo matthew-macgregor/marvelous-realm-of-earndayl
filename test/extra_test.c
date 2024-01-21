@@ -8,7 +8,14 @@
 
 extern int tests_run;
 
+static char *extra_test_baseline(void) {
+    mu_assert("extra assert", 0 == 0);
+    return 0;
+}
+
+
 static char* extra_test_all_tests(void) {
+    mu_run_test(extra_test_baseline);
     // next test here
     return 0;
 }
