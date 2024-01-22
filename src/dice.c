@@ -3,16 +3,17 @@
 #include "dice.h"
 
 // srand(time(NULL));   // Initialization, should only be called once.
-
-DiceRoll d1d2   = dice_new_die(1, 2);
-DiceRoll d1d4   = dice_new_die(1, 4);
-DiceRoll d1d6   = dice_new_die(1, 6);
-DiceRoll d1d8   = dice_new_die(1, 8);
-DiceRoll d1d10  = dice_new_die(1, 10);
-DiceRoll d1d12  = dice_new_die(1, 12);
-DiceRoll d1d20  = dice_new_die(1, 20);
-DiceRoll d1d100 = dice_new_die(1, 100);
-DiceRoll d3d6   = { 1, 6, 0, 3 };
+DiceRoll dice[] = {
+    dice_new_die(1, 2),         // 1d2
+    dice_new_die(1, 4),         // 1d4
+    dice_new_die(1, 6),         // 1d6
+    dice_new_die(1, 8),         // 1d8
+    dice_new_die(1, 10),        // 1d10
+    dice_new_die(1, 12),        // 1d12
+    dice_new_die(1, 20),        // 1d20
+    dice_new_die(1, 100),       // 1d100
+    { 1, 6, 0, 3 }              // 3d6
+};
 
 int dice_roll(DiceRoll *range) {
     int result = 0;
@@ -24,31 +25,31 @@ int dice_roll(DiceRoll *range) {
 }
 
 int dice_roll_1d4(void) {
-    return dice_roll(&d1d4);
+    return dice_roll(d1d4);
 }
 
 int dice_roll_1d6(void) {
-    return dice_roll(&d1d6);
+    return dice_roll(d1d6);
 }
 
 int dice_roll_3d6(void) {
-    return dice_roll(&d3d6);
+    return dice_roll(d3d6);
 }
 
 int dice_roll_1d8(void) {
-    return dice_roll(&d1d8);
+    return dice_roll(d1d8);
 }
 
 int dice_roll_1d12(void) {
-    return dice_roll(&d1d12);
+    return dice_roll(d1d12);
 }
 
 int dice_roll_1d20(void) {
-    return dice_roll(&d1d20);
+    return dice_roll(d1d20);
 }
 
 int dice_roll_1d100(void) {
-    return dice_roll(&d1d100);
+    return dice_roll(d1d100);
 }
 
 #ifdef TEST
@@ -57,19 +58,19 @@ int dice_roll_1d100(void) {
 #include "test_results.h"
 
 static char *dice_test_baseline(void) {
-    int roll = dice_roll(&d1d4);
+    int roll = dice_roll(d1d4);
     mu_assert("1d4", roll > 0 && roll <= 4);
-    roll = dice_roll(&d1d6);
+    roll = dice_roll(d1d6);
     mu_assert("1d6", roll > 0 && roll <= 6);
-    roll = dice_roll(&d1d8);
+    roll = dice_roll(d1d8);
     mu_assert("1d8", roll > 0 && roll <= 8);
-    roll = dice_roll(&d1d10);
+    roll = dice_roll(d1d10);
     mu_assert("1d10", roll > 0 && roll <= 10);
-    roll = dice_roll(&d1d12);
+    roll = dice_roll(d1d12);
     mu_assert("1d12", roll > 0 && roll <= 12);
-    roll = dice_roll(&d1d20);
+    roll = dice_roll(d1d20);
     mu_assert("1d20", roll > 0 && roll <= 20);
-    roll = dice_roll(&d1d100);
+    roll = dice_roll(d1d100);
     mu_assert("1d100", roll > 0 && roll <= 100);
     return 0;
 }

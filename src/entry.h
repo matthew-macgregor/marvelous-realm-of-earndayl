@@ -15,9 +15,9 @@ typedef struct Coins {
 
 typedef long entry_id;
 typedef struct Entry {
-   const entry_id id;
-   const char *short_description;
-   const char *traits;
+   entry_id id;
+   char *short_description;
+   char *traits;
    struct Entry *location;
    int heft;
    DiceRoll *damage;

@@ -24,26 +24,28 @@ static bool cmd_unknown(const char *input);
 
 #ifdef DEBUG
 static bool cmd_debug_value(void);
+static bool cmd_debug_copy_to_empty(void);
 #endif
 
 #define END_OF_COMMANDS { NULL, NULL }
 static const Command commands[] = {
-    { "quit",           cmd_quit         },
-    { "exit",           cmd_quit         },
-    { "q",              cmd_quit         },
-    { "bye",            cmd_quit         },
-    { "empty A",        cmd_empty        },
-    { "look in A",      cmd_look_in      },
-    { "look at A",      NULL             },
-    { "look around",    cmd_look         },
-    { "look",           cmd_look         },
-    { "go A",           cmd_move         },
-    { "get A",          cmd_get          },
-    { "inventory",      cmd_inventory    },
-    { "drop A",         cmd_drop         },
-    { "arm A",          cmd_ready_weapon },
+    { "quit",           cmd_quit                     },
+    { "exit",           cmd_quit                     },
+    { "q",              cmd_quit                     },
+    { "bye",            cmd_quit                     },
+    { "empty A",        cmd_empty                    },
+    { "look in A",      cmd_look_in                  },
+    { "look at A",      NULL                         },
+    { "look around",    cmd_look                     },
+    { "look",           cmd_look                     },
+    { "go A",           cmd_move                     },
+    { "get A",          cmd_get                      },
+    { "inventory",      cmd_inventory                },
+    { "drop A",         cmd_drop                     },
+    { "arm A",          cmd_ready_weapon             },
 #ifdef DEBUG
-    { "debug value A",  cmd_debug_value  },
+    { "debug value A",  cmd_debug_value              },
+    { "debug copy-to-empty", cmd_debug_copy_to_empty },
 #endif
     END_OF_COMMANDS
 };
@@ -288,6 +290,8 @@ static bool cmd_quit(void) {
 }
 
 #ifdef DEBUG
+#include "dice.h"
+
 static bool cmd_debug_value(void) {
     const char *phrase = get_captured_phrase('A');
     Entry *entry = entry_search_by_trait(phrase);
@@ -307,6 +311,23 @@ static bool cmd_debug_value(void) {
     DEBUG_PRINTF(CON_CYAN "Debug::Siver: %d\n" CON_RESET, value.silver);
     DEBUG_PRINTF(CON_CYAN "Debug::Copper: %d\n" CON_RESET, value.copper);
 
+    return true;
+}
+
+static bool cmd_debug_copy_to_empty(void) {
+    Entry *entry = entry_get_by_entry_id(E_EMPTY);
+    if (entry != NULL) {
+        printf(CON_CYAN "Debug::Empty Entry -> %s\n" CON_RESET, entry->short_description);
+    }
+
+    Coins coins = {0,5,25};
+    entry->id = 5000;
+    entry->short_description = "sword";
+    entry->traits = "stout sword";
+    entry->location = EP_INVENTORY;
+    entry->heft = 5;
+    entry->damage = d1d8;
+    entry->value = coins;
     return true;
 }
 #endif

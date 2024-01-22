@@ -5,7 +5,8 @@ puts "Builder => Welcome to the Marvelous Realm of Eärndayl"
 desc 'Cleans all temporary, build, and intermediate files'
 task :clean do
   puts "Cleaning"
-  system('ninja -t clean')
+  r = system('ninja -t clean')
+  exit! unless r
 end
 
 desc 'Generates content and code for the game'
@@ -16,18 +17,20 @@ end
 desc 'Builds the game'
 task :build do
   puts "Building game"
-  system('ninja main')
+  r = system('ninja main')
+  exit! unless r
 end
 
 desc 'Runs the tests'
 task :test do
   puts "Running tests"
   r = system('ninja test run-test')
-  exit! unless r == 0
+  exit! unless r
 end
 
 desc 'Runs the game'
-task run: [:build] do
+task run: [ :build ] do
   puts "Running game"
-  system('build/main')
+  r = system('build/main')
+  exit! unless r
 end

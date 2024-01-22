@@ -140,7 +140,7 @@ static char *test_entry_move_entry(void) {
 
 static char *test_entry_count(void) {
     size_t entry_cnt = entry_get_entry_count();
-    mu_assert("entry count", entry_cnt == 7);
+    mu_assert("entry count", entry_cnt == 8);
     return 0;
 }
 
