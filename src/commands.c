@@ -40,6 +40,8 @@ static const Command commands[] = {
     { "look",           cmd_look                     },
     { "go A",           cmd_move                     },
     { "get A",          cmd_get                      },
+    { "i",              cmd_inventory                },
+    { "inv",            cmd_inventory                },
     { "inventory",      cmd_inventory                },
     { "drop A",         cmd_drop                     },
     { "arm A",          cmd_ready_weapon             },
@@ -55,7 +57,10 @@ bool interpret_command(const char *input) {
     CapturedPhraseResult result = { 0, 0, false };
     for (const Command *cmd = commands; !result.matched && cmd->pattern != NULL; cmd++) {
         result = parse_pattern(input, cmd->pattern);
-        if (result.matched) matched_cmd = cmd;
+        if (result.matched) {
+            matched_cmd = cmd;
+            break;
+        }
     }
 
     if (!result.matched) {
