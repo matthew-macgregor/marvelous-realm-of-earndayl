@@ -25,6 +25,19 @@
         "colors.h": "c",
         "dice.h": "c",
         "sample.h": "c",
-        "treasure.h": "c"
+        "treasure.h": "c",
+        "bitset": "c",
+        "deque": "c",
+        "__memory": "c",
+        "limits": "c",
+        "ratio": "c",
+        "tuple": "c",
+        "type_traits": "c",
+        "vector": "c",
+        "random": "c",
+        "charconv": "c",
+        "array": "c",
+        "functional": "c",
+        "utility": "c"
     }
 }

@@ -5,13 +5,13 @@ DiceRoll range_1d2 = dice_new_die(1, 2);
 
 Entry entries[] = {
     // entry_id, short_description, traits, entry, heft, damage (min, max)
-    {E_INVENTORY, "your backpack", "inventory;backpack", NULL, IS_STATIC, NULL},
-    {E_ENTRY_CAVE, "a narrow cave with wet walls", "start", NULL, IS_STATIC, NULL},
-    {E_EASTERN_PASSAGE, "the eastern passage", "eastern passage", NULL, IS_STATIC, NULL},
-    {E_WESTERN_PASSAGE, "the western passage", "western passage", NULL, IS_STATIC, NULL},
-    {E_ROTTEN_CHEST, "a rotten chest", "rotten chest", EP_WESTERN_PASSAGE, 20, NULL},
-    {E_RUSTY_DAGGER, "a rusty dagger", "rusty dagger", EP_ROTTEN_CHEST, 1, &range_1d2},
-    {E_COPPER_PENNY, "a copper penny", "copper penny", EP_ENTRY_CAVE, 0, NULL}
+    {E_INVENTORY, "your backpack", "inventory;backpack", NULL, IS_STATIC, NULL, VALUE_NIL},
+    {E_ENTRY_CAVE, "a narrow cave with wet walls", "start", NULL, IS_STATIC, NULL, VALUE_NIL},
+    {E_EASTERN_PASSAGE, "the eastern passage", "eastern passage", NULL, IS_STATIC, NULL, VALUE_NIL},
+    {E_WESTERN_PASSAGE, "the western passage", "western passage", NULL, IS_STATIC, NULL, VALUE_NIL},
+    {E_ROTTEN_CHEST, "a rotten chest", "rotten chest", EP_WESTERN_PASSAGE, 20, NULL, VALUE_NIL},
+    {E_RUSTY_DAGGER, "a rusty dagger", "rusty dagger", EP_ROTTEN_CHEST, 1, &range_1d2, {5,0,0}},
+    {E_COPPER_PENNY, "a copper penny", "copper penny", EP_ENTRY_CAVE, 0, NULL, {1,0,0}}
 };
 
 Connector connectors[] = {
@@ -21,13 +21,9 @@ Connector connectors[] = {
     { EP_WESTERN_PASSAGE, EAST, EP_ENTRY_CAVE }
 };
 
-EntryValue treasures[] = {
-    { E_COPPER_PENNY, EP_COPPER_PENNY, {1,0,0} }
-};
-
 #define ENTRY_COUNT (size_t)(sizeof entries / sizeof *entries)
 #define CONNECTOR_COUNT (size_t)(sizeof connectors / sizeof *connectors)
-#define ENTRY_VALUE_COUNT (size_t)(sizeof treasures / sizeof *treasures)
+#define TREASURE_VALUE_COUNT (size_t)(sizeof treasure_values / sizeof *treasure_values)
 
 extern inline size_t entry_get_entry_count(void) {
     return ENTRY_COUNT;
@@ -43,14 +39,6 @@ extern inline size_t connector_get_connector_count(void) {
 
 extern inline ConnectorArrayPtr connector_get_connectors(void) {
     return connectors;
-}
-
-extern inline size_t treasure_get_treasures_count(void) {
-    return ENTRY_VALUE_COUNT;
-}
-
-extern inline EntryValueArrayPtr treasure_get_treasures(void) {
-    return treasures;
 }
 
 /**

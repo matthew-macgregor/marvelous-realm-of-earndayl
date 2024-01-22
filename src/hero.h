@@ -1,7 +1,6 @@
 #ifndef HERO_H
 #define HERO_H
 #include "entry.h"
-#include "treasure.h"
 
 typedef Entry Weapon;
 

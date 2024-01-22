@@ -2,11 +2,9 @@
 #define GAME_DATA_ENTRIES_H
 #include "entry.h"
 #include "connectors.h"
-#include "treasure.h"
 
 extern Entry entries[];
 extern Connector connectors[];
-extern EntryValue entries_value[];
 
 // Entry IDs: Each must be unique and stable (for save games)
 #define E_INVENTORY                  99

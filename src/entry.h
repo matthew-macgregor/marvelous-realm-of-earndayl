@@ -7,19 +7,27 @@
 #include "directions.h"
 #include "dice.h"
 
+typedef struct Coins {
+    int copper;
+    int silver;
+    int gold;
+} Coins;
+
 typedef long entry_id;
 typedef struct Entry {
    const entry_id id;
    const char *short_description;
    const char *traits;
-   struct Entry *entry;
+   struct Entry *location;
    int heft;
    DiceRoll *damage;
+   Coins value;
 } Entry;
 typedef Entry *EntryArrayPtr;
 
-#define ENTRY_UNKNOWN ((entry_id)-1)
-#define IS_STATIC     ((int)-1)
+#define VALUE_NIL          {0,0,0}
+#define ENTRY_UNKNOWN      ((entry_id)-1)
+#define IS_STATIC          ((int)-1)
 
 // Defined in game/game_data.c
 size_t entry_get_entry_count(void);
@@ -36,6 +44,8 @@ bool entry_has_trait(const Entry *entry, const char *trait);
 const char *entry_get_short_description(const Entry *entry);
 const char *entry_get_traits(const Entry *entry);
 const char *entry_get_exits(const Entry *entry);
+Coins *entry_get_value(Entry *entry);
+bool entry_is_value_nil(Entry *entry);
 
 /**
  * Notes

@@ -27,7 +27,7 @@ task :test do
 end
 
 desc 'Runs the game'
-task :run do
+task run: [:build] do
   puts "Running game"
   system('build/main')
 end

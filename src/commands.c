@@ -109,8 +109,8 @@ static bool cmd_empty(void) {
     for (size_t i = 0; i < entry_count; i++) {
         Entry obj = entries[i];
         int emptied_count = 0;
-        if (obj.entry == container) {
-            (&entries[i])->entry = here;
+        if (obj.location == container) {
+            (&entries[i])->location = here;
             // If the item's location is the container, it's in the container.
             printf(
                 "%sYou remove %s from %s.",
@@ -161,7 +161,7 @@ static bool cmd_inventory(void) {
     bool found_obj = false;
     for (size_t i = 0; i < entry_count; i++) {
         Entry *obj = &entries[i];
-        if (obj->entry == inventory) {
+        if (obj->location == inventory) {
             char *armed = obj == hero->armed_weapon ? "(ARMED)" : "";
             printf("\n - %s %s", obj->short_description, armed);
             found_obj = true;
@@ -180,7 +180,7 @@ static bool cmd_look_objects(void) {
     bool found_obj = false;
     for (size_t i = 0; i < entry_count; i++) {
         Entry obj = entries[i];
-        if (obj.entry == here) {
+        if (obj.location == here) {
             printf("%sYou see %s here.",
                 found_obj ? "\n" : "",
                 obj.short_description);
@@ -228,7 +228,7 @@ static bool cmd_look_in(void) {
     printf("In %s, you see:", container->short_description);
     for (size_t i = 0; i < entry_count; i++) {
         Entry obj = entries[i];
-        if (obj.entry == container) {
+        if (obj.location == container) {
             // If the item's location is the container, it's in the container.
             printf("\n - %s", obj.short_description);
             found_obj = true;
@@ -269,7 +269,7 @@ static bool cmd_move(void) {
 static bool cmd_ready_weapon(void) {
     const char *phrase = get_captured_phrase('A');
     Entry *entry = entry_search_by_trait(phrase);
-    if (entry == NULL || entry->entry != EP_INVENTORY) {
+    if (entry == NULL || entry->location != EP_INVENTORY) {
         printf(CON_RED "Could not find %s to ready." CON_RESET, phrase);
     } else {
         if (hero_arm_weapon(entry)) {
@@ -295,15 +295,17 @@ static bool cmd_debug_value(void) {
         printf("Debug: can't find '%s'", phrase);
         return true;
     }
-    EntryValue *value = treasure_get_value(entry);
-    if (value == NULL) {
+
+    if (entry_is_value_nil(entry)) {
         printf("Debug: no value for '%s'", phrase);
         return true;
     }
 
-    DEBUG_PRINTF(CON_CYAN "Debug::Gold: %d\n" CON_RESET, value->coins.gold);
-    DEBUG_PRINTF(CON_CYAN "Debug::Siver: %d\n" CON_RESET, value->coins.silver);
-    DEBUG_PRINTF(CON_CYAN "Debug::Copper: %d\n" CON_RESET, value->coins.copper);
+    Coins value = entry->value;
+
+    DEBUG_PRINTF(CON_CYAN "Debug::Gold: %d\n" CON_RESET, value.gold);
+    DEBUG_PRINTF(CON_CYAN "Debug::Siver: %d\n" CON_RESET, value.silver);
+    DEBUG_PRINTF(CON_CYAN "Debug::Copper: %d\n" CON_RESET, value.copper);
 
     return true;
 }

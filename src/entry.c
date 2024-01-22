@@ -38,8 +38,8 @@ Entry *entry_search_by_trait_and_entry_id(const char *trait, entry_id loc) {
     for (size_t i = 0; i < count; i++) {
         Entry e = entries[i];
         if (strstr(e.traits, trait) && 
-            e.entry != NULL && 
-            e.entry->id == loc) {
+            e.location != NULL && 
+            e.location->id == loc) {
             return &entries[i];
         }
     }
@@ -93,10 +93,19 @@ const char *entry_get_exits(const Entry *entry) {
 
 extern inline bool entry_assign_a_to_b(Entry *a, Entry *b) {
     if (a != NULL) {
-        a->entry = b;
+        a->location = b;
         return true;
     }
     return false;
+}
+
+bool entry_is_value_nil(Entry *entry) {
+    Coins *coins = &entry->value;
+    return (
+        coins->copper   == 0 &&
+        coins->silver   == 0 &&
+        coins->gold     == 0
+    ); 
 }
 
 #ifdef TEST
@@ -121,10 +130,10 @@ static char *test_entry_search_by_trait_and_location_id(void) {
 static char *test_entry_move_entry(void) {
     Entry *container = entry_get_by_entry_id(E_ENTRY_CAVE);
     DiceRoll r = {1, 2, 0, 1};
-    Entry contained = { 55, "a lantern", "rusty", NULL, 1, &r};
+    Entry contained = { 55, "a lantern", "rusty", NULL, 1, &r, {0,0,0}};
     bool result = entry_assign_a_to_b(&contained, container);
     mu_assert("entry_move_entry: result", result);
-    mu_assert("entry_move_entry: entry", contained.entry == EP_ENTRY_CAVE);
+    mu_assert("entry_move_entry: entry", contained.location == EP_ENTRY_CAVE);
     return 0;
 }
 
