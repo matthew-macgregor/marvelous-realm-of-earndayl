@@ -37,6 +37,7 @@ static const Command commands[] = {
     { "empty A",        cmd_empty                    },
     { "look in A",      cmd_look_in                  },
     { "look at A",      cmd_look_at                  },
+    { "look A",         cmd_look_at                  },
     { "look around",    cmd_look                     },
     { "look",           cmd_look                     },
     { "go A",           cmd_move                     },
@@ -84,7 +85,7 @@ static bool cmd_unknown(const char *input) {
 static bool cmd_drop(void) {
     Entry *here = hero_get_entry();
     Entry *inventory = inv_get_inventory_entry();
-    const char *phrase = get_captured_phrase('A');
+    const char *phrase = parse_get_captured_phrase('A');
     assert(here != NULL && inventory != NULL && *phrase != '\0');
 
     Entry *obj = entry_search_by_trait_and_entry_id(phrase, inventory->id);
@@ -107,7 +108,7 @@ static bool cmd_empty(void) {
     Entry *here = hero_get_entry();
     size_t entry_count = entry_get_entry_count();
     EntryArrayPtr entries = entry_get_entries();
-    const char *phrase = get_captured_phrase('A');
+    const char *phrase = parse_get_captured_phrase('A');
     Entry *container = entry_search_by_trait_and_entry_id(phrase, here->id);
     if (container == NULL) {
         printf("You don't see a %s here.\n", phrase);
@@ -134,7 +135,7 @@ static bool cmd_empty(void) {
 
 static bool cmd_get(void) {
     Entry *here = hero_get_entry();
-    const char *phrase = get_captured_phrase('A');
+    const char *phrase = parse_get_captured_phrase('A');
     Entry *entry = entry_search_by_trait_and_entry_id(phrase, here->id);
     const int encumbrance = inv_get_encumbrance();
 
@@ -223,9 +224,7 @@ static bool cmd_look(void) {
 
 static bool cmd_look_at(void) {
     Entry *here = hero_get_entry();
-    // size_t entry_count = entry_get_entry_count();
-    // EntryArrayPtr entries = entry_get_entries();
-    const char *phrase = get_captured_phrase('A');
+    const char *phrase = parse_get_captured_phrase('A');
     Entry *entry = entry_search_by_trait(phrase);
     if (entry != NULL && (entry->location == here || entry->location == EP_INVENTORY)) {
         printf("%s", entry->short_description);
@@ -240,7 +239,7 @@ static bool cmd_look_in(void) {
     Entry *here = hero_get_entry();
     size_t entry_count = entry_get_entry_count();
     EntryArrayPtr entries = entry_get_entries();
-    const char *phrase = get_captured_phrase('A');
+    const char *phrase = parse_get_captured_phrase('A');
     Entry *container = entry_search_by_trait_and_entry_id(phrase, here->id);
     if (container == NULL) {
         printf("You don't see a %s here.\n", phrase);
@@ -267,7 +266,7 @@ static bool cmd_look_in(void) {
 static bool cmd_move(void) {
     Entry *entry = hero_get_entry();
     if (entry != NULL) {
-        const char *phrase = get_captured_phrase('A');
+        const char *phrase = parse_get_captured_phrase('A');
         const Direction dir = direction_text_to_direction(phrase);
         const char *dir_text = direction_to_text(dir);
         const entry_id loc = connector_get_location_id_in_direction(entry, dir);
@@ -290,7 +289,7 @@ static bool cmd_move(void) {
 }
 
 static bool cmd_ready_weapon(void) {
-    const char *phrase = get_captured_phrase('A');
+    const char *phrase = parse_get_captured_phrase('A');
     Entry *entry = entry_search_by_trait(phrase);
     if (entry == NULL || entry->location != EP_INVENTORY) {
         printf(CON_RED "Could not find %s to ready." CON_RESET, phrase);
@@ -314,7 +313,7 @@ static bool cmd_quit(void) {
 #include "dice.h"
 
 static bool cmd_debug_value(void) {
-    const char *phrase = get_captured_phrase('A');
+    const char *phrase = parse_get_captured_phrase('A');
     Entry *entry = entry_search_by_trait(phrase);
     if (entry == NULL) {
         printf("Debug: can't find '%s'", phrase);

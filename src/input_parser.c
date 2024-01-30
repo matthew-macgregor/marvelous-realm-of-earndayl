@@ -19,14 +19,14 @@ static char parser_capture_buffer[PARSER_CAPTURE_BUFFER_COUNT][PARSER_CAPTURE_BU
 
 #define is_char_in_range(c) ((c) >= 'A' && (c) <= 'Z')
 
-char *get_captured_phrase(char buffer_id) {
+char *parse_get_captured_phrase(char buffer_id) {
     return get_capture_buffer_by_letter(buffer_id);
 }
 
 /**
  * Returns the number of phrases captured from the input and pattern. 
  */
-int get_captured_phrase_count(void) {
+int parse_get_captured_phrase_count(void) {
     int count = 0;
     for (char c = 'A'; c <= 'Z'; c++) {
         char *buff = get_capture_buffer_by_letter(c);
@@ -220,7 +220,7 @@ static char *test_parse_pattern(void) {
     mu_assert("parse_pattern 1: placeholder_count", result.placeholder_count == 2);
     mu_assert("parse_pattern 1: golden axe", strcmp(get_capture_buffer_by_letter('A'), "golden axe") == 0);
     mu_assert("parse_pattern 1: orc", strcmp(get_capture_buffer_by_letter('B'), "orc") == 0);
-    mu_assert("parse_pattern 1: get golden axe from orc count", get_captured_phrase_count() == 2);
+    mu_assert("parse_pattern 1: get golden axe from orc count", parse_get_captured_phrase_count() == 2);
 
     result = parse_pattern("put sparkling ruby into knapsack with smile", "put A into B with C");
     mu_assert("parse_pattern 2: captured_phrase_count", result.captured_phrase_count == 3);
@@ -228,34 +228,34 @@ static char *test_parse_pattern(void) {
     mu_assert("parse_pattern 2: sparkling ruby", strcmp(get_capture_buffer_by_letter('A'), "sparkling ruby") == 0);
     mu_assert("parse_pattern 2: knapsack", strcmp(get_capture_buffer_by_letter('B'), "knapsack") == 0);
     mu_assert("parse_pattern 2: smile", strcmp(get_capture_buffer_by_letter('C'), "smile") == 0);
-    mu_assert("parse_pattern 2: put sparkling ruby into knapsack with smile count", get_captured_phrase_count() == 3);
+    mu_assert("parse_pattern 2: put sparkling ruby into knapsack with smile count", parse_get_captured_phrase_count() == 3);
 
     result = parse_pattern("  get      golden axe    from    grim orc  ", "get A from B");
     mu_assert("parse_pattern: captured_phrase_count", result.captured_phrase_count == 2);
     mu_assert("parse_pattern: placeholder_count", result.placeholder_count == 2);
     mu_assert("parse_pattern: golden axe", strcmp(get_capture_buffer_by_letter('A'), "golden axe") == 0);
     mu_assert("parse_pattern: grim orc", strcmp(get_capture_buffer_by_letter('B'), "grim orc") == 0);
-    mu_assert("parse_pattern: get golden axe from grim orc count", get_captured_phrase_count() == 2);
+    mu_assert("parse_pattern: get golden axe from grim orc count", parse_get_captured_phrase_count() == 2);
 
     result = parse_pattern("  get golden axe  from   green orc ", "  get   A from B  ");
     mu_assert("parse_pattern: captured_phrase_count", result.captured_phrase_count == 2);
     mu_assert("parse_pattern: placeholder_count", result.placeholder_count == 2);
     mu_assert("parse_pattern: golden axe", strcmp(get_capture_buffer_by_letter('A'), "golden axe") == 0);
     mu_assert("parse_pattern: orc", strcmp(get_capture_buffer_by_letter('B'), "green orc") == 0);
-    mu_assert("parse_pattern: get golden axe from green orc", get_captured_phrase_count() == 2);
+    mu_assert("parse_pattern: get golden axe from green orc", parse_get_captured_phrase_count() == 2);
 
     result = parse_pattern("look in chest", "look in A");
     mu_assert("parse_pattern: captured_phrase_count", result.captured_phrase_count = 1);
     mu_assert("parse_pattern: placeholder_count", result.placeholder_count == 1);
     mu_assert("parse_pattern: chest", strcmp(get_capture_buffer_by_letter('A'), "chest") == 0);
-    mu_assert("parse_pattern: look in chest", get_captured_phrase_count() == 1);
+    mu_assert("parse_pattern: look in chest", parse_get_captured_phrase_count() == 1);
 
     result = parse_pattern("look in chest", "look at A");
     mu_assert("parse_pattern: captured_phrase_count", result.captured_phrase_count = 1);
     mu_assert("parse_pattern: placeholder_count", result.placeholder_count == 1);
     mu_assert("parse_pattern: matched", result.matched == false);
     mu_assert("parse_pattern: chest", strcmp(get_capture_buffer_by_letter('A'), "chest") == 0);
-    mu_assert("parse_pattern: look at chest", get_captured_phrase_count() == 1);
+    mu_assert("parse_pattern: look at chest", parse_get_captured_phrase_count() == 1);
     return 0;
 }
 
@@ -265,14 +265,14 @@ static char *test_parse_pattern_edge_cases(void) {
     mu_assert("parse_pattern edges: pattern is shorter, captured_phrase_count", result.captured_phrase_count == 1);
     mu_assert("parse_pattern edges: golden axe", strcmp(get_capture_buffer_by_letter('A'), "golden axe from orc") == 0);
     mu_assert("parse_pattern edges: empty", strcmp(get_capture_buffer_by_letter('B'), "") == 0);
-    mu_assert("parse_pattern edges: get golden axe from orc count", get_captured_phrase_count() == 1);
+    mu_assert("parse_pattern edges: get golden axe from orc count", parse_get_captured_phrase_count() == 1);
 
     result = parse_pattern("get golden axe", "get A from B");
     mu_assert("parse_pattern edges: pattern is longer, placeholder_count", result.placeholder_count == 2);
     mu_assert("parse_pattern edges: pattern is longer, captured_phrase_count", result.captured_phrase_count == 1);
     mu_assert("parse_pattern edges: golden axe", strcmp(get_capture_buffer_by_letter('A'), "golden axe") == 0);
     mu_assert("parse_pattern edges: empty", strcmp(get_capture_buffer_by_letter('B'), "") == 0);
-    mu_assert("parse_pattern edges: get golden axe count", get_captured_phrase_count() == 1);
+    mu_assert("parse_pattern edges: get golden axe count", parse_get_captured_phrase_count() == 1);
 
     return 0;
 }
