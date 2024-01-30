@@ -16,6 +16,7 @@ static bool cmd_empty(void);
 static bool cmd_get(void);
 static bool cmd_inventory(void);
 static bool cmd_look(void);
+static bool cmd_look_at(void);
 static bool cmd_look_in(void);
 static bool cmd_move(void);
 static bool cmd_ready_weapon(void);
@@ -35,7 +36,7 @@ static const Command commands[] = {
     { "bye",            cmd_quit                     },
     { "empty A",        cmd_empty                    },
     { "look in A",      cmd_look_in                  },
-    { "look at A",      NULL                         },
+    { "look at A",      cmd_look_at                  },
     { "look around",    cmd_look                     },
     { "look",           cmd_look                     },
     { "go A",           cmd_move                     },
@@ -215,6 +216,21 @@ static bool cmd_look(void) {
         cmd_look_objects();
     } else {
         printf("%s", "Not sure what you want to look at!");
+    }
+
+    return true;
+}
+
+static bool cmd_look_at(void) {
+    Entry *here = hero_get_entry();
+    // size_t entry_count = entry_get_entry_count();
+    // EntryArrayPtr entries = entry_get_entries();
+    const char *phrase = get_captured_phrase('A');
+    Entry *entry = entry_search_by_trait(phrase);
+    if (entry != NULL && (entry->location == here || entry->location == EP_INVENTORY)) {
+        printf("%s", entry->short_description);
+    } else {
+        printf("You don't see a '%s'.", phrase);
     }
 
     return true;
