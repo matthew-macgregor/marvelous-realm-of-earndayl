@@ -4,7 +4,7 @@
 DiceRoll range_1d2 = dice_new_die(1, 2);
 
 Entry entries[] = {
-    // entry_id, short_description, traits, entry, heft, damage (min, max)
+    // entry_id, short_description, traits, location, heft, damage (min, max)
     {E_EMPTY, "the ...<VOID>...", "nil", NULL, IS_STATIC, NULL, VALUE_NIL},
     {E_INVENTORY, "your backpack", "inventory;backpack", NULL, IS_STATIC, NULL, VALUE_NIL},
     {E_ENTRY_CAVE, "a narrow cave with wet walls", "start", NULL, IS_STATIC, NULL, VALUE_NIL},

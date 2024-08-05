@@ -55,7 +55,7 @@ bool entry_is_value_nil(Entry *entry);
  * 1. An Entry acts as a "location". Example: cavern, outhouse, etc.
  * 2. As a "virtual" container, an Entry is a sort of subset of the concept
  *    of a location. A chest can be in a cavern, and a rusty dagger can be in
- *    a chest.
+ *    a chest. This is handled through the location pointer.
  * 
  *    Cavern [Entry] <- Chest [Entry] <- Rusty dagger [Entry]
  * 
