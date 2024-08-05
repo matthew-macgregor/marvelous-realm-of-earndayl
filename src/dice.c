@@ -1,5 +1,6 @@
 #include <time.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include "dice.h"
 
 // srand(time(NULL));   // Initialization, should only be called once.

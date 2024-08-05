@@ -2,14 +2,15 @@ cflags = -Wall -Werror -Wextra -ansi -pedantic -std=c99 -fsanitize=address,undef
 headers = -Isrc
 
 cflags_test = -Itest $cflags -DTEST
+CC=gcc
 
 rule cc
     deps = gcc
     depfile = $out.d
-    command = gcc -MD -MF $out.d $headers $cflags -c $in -o $out
+    command = $CC -MD -MF $out.d $headers $cflags -c $in -o $out
 
 rule link
-    command = gcc $in -o $out -g -fsanitize=address,undefined
+    command = $CC $in -o $out -g -fsanitize=address,undefined
 
 rule run-test
     command = build/test > /dev/null

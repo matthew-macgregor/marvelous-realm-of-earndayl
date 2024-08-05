@@ -1,3 +1,5 @@
+#define _POSIX_C_SOURCE 200809L // for strdup, POSIX extension
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -77,8 +79,20 @@ static char* try_consume_token(const char *token, const char placeholder_id) {
     return NULL;
 }
 
-#define tokens_dont_match(t1, t2) (((t1) && (t2) && (strcmp(t1, t2) != 0)) || ((t1) == NULL || (t2) == NULL))
-#define tokens_match(t1, t2) ((t1) && (t2) && (strcmp(t1, t2) == 0))
+static bool tokens_dont_match(const char *token1, const char *token2) {
+    return (token1 && token2 && strcmp(token1, token2) != 0) || 
+	   (token1 == NULL || token2 == NULL);
+}
+
+#if TEST // Not currently used in non-test code
+static bool tokens_match(const char *token1, const char *token2) {
+    return
+	token1 != NULL &&
+	token2 != NULL &&
+	strcmp(token1, token2) == 0;
+}
+#endif
+
 #define looks_like_placeholder(tok) ((tok) && (strlen(tok) == 1) && is_char_in_range(tok[0]))
 
 /**

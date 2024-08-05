@@ -33,6 +33,14 @@ To build the C source code:
 For code generation:
 - Ruby 3.2.2+
 
+You will need a C99 compliant C compiler.
+
+Tested with:
+- Ruby 3.2.2, 3.3.4
+- gcc version 11.4.0 (Ubuntu 11.4.0-1ubuntu1~22.04)
+- Ubuntu clang version 14.0.0-1ubuntu1.1
+- macOS clang version <unknown>
+
 ## Building the Content with Rake
 
 To build code and content, run the `rake` command.
