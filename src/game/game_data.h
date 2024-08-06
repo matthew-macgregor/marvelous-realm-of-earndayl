@@ -17,6 +17,10 @@ extern Connector connectors[];
 #define E_ROTTEN_CHEST              1000
 #define E_RUSTY_DAGGER              1001
 #define E_COPPER_PENNY              1002
+#define E_OGRES_CLUB                1003
+
+// NPCs
+#define E_GRIM_OGRE                 5001
 
 // Entry Pointers (EP): Used internally to reference the entries directly
 #define EP_EMPTY                    (entries + 0)
@@ -27,5 +31,7 @@ extern Connector connectors[];
 #define EP_ROTTEN_CHEST             (entries + 5)
 #define EP_RUSTY_DAGGER             (entries + 6)
 #define EP_COPPER_PENNY             (entries + 7)
+#define EP_OGRES_CLUB               (entries + 8)
+#define EP_GRIM_OGRE                (entries + 9)
 
 #endif // GAME_DATA_ENTRIES_H

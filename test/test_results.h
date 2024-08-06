@@ -2,7 +2,7 @@
 #define TEST_RESULTS_H
 
 #include <stdio.h>
-#include "colors.h"
+#include "../src/colors.h"
 
 /* Declaration */
 int report_test_results(const char *suite, const char *result);

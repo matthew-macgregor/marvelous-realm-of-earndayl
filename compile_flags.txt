@@ -1,0 +1,9 @@
+-Isrc
+-Wall
+-Werror
+-Wextra
+-ansi
+-pedantic
+-std=c99
+-fsanitize=address,undefined
+-DDEBUG

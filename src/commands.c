@@ -225,7 +225,7 @@ static bool cmd_look(void) {
 static bool cmd_look_at(void) {
     Entry *here = hero_get_entry();
     const char *phrase = parse_get_captured_phrase('A');
-    Entry *entry = entry_search_by_trait(phrase);
+    Entry *entry = entry_search_by_trait_and_entry_id(phrase, here->id);
     if (entry != NULL && (entry->location == here || entry->location == EP_INVENTORY)) {
         printf("%s", entry->short_description);
     } else {
@@ -257,8 +257,8 @@ static bool cmd_look_in(void) {
         }
     }
 
-    found_obj ? 
-        printf("\n(Hint: try the 'empty' command on %s!)\n", container->short_description) : 
+    found_obj ?
+        printf("\n(Hint: try the 'empty' command on %s!)\n", container->short_description) :
         printf("nothing.\n");
     return true;
 }

@@ -1,8 +1,9 @@
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 #include "entry.h"
-#include "string_utils.h"
 #include "connectors.h"
+#include "directions.h"
 #include "game/game_data.h"
 
 // -------------------------             N  / E  / S  / W    NE  / NW  / SE /  SW
@@ -24,7 +25,9 @@ Entry *entry_search_by_trait(const char *trait) {
     EntryArrayPtr entries = entry_get_entries();
     for (size_t i = 0; i < entry_cnt; i++) {
         Entry entry = entries[i];
+        printf("%zu) %s -> %s\n", i, entry.traits, trait);
         if (strstr(entry.traits, trait)) {
+            printf(">> %s -> %s\n", entry.traits, trait);
             return &entries[i];
         }
     }
@@ -37,8 +40,8 @@ Entry *entry_search_by_trait_and_entry_id(const char *trait, entry_id loc) {
     EntryArrayPtr entries = entry_get_entries();
     for (size_t i = 0; i < count; i++) {
         Entry e = entries[i];
-        if (strstr(e.traits, trait) && 
-            e.location != NULL && 
+        if (strstr(e.traits, trait) &&
+            e.location != NULL &&
             e.location->id == loc) {
             return &entries[i];
         }
@@ -105,7 +108,7 @@ bool entry_is_value_nil(Entry *entry) {
         coins->copper   == 0 &&
         coins->silver   == 0 &&
         coins->gold     == 0
-    ); 
+    );
 }
 
 #ifdef TEST
@@ -137,10 +140,9 @@ static char *test_entry_move_entry(void) {
     return 0;
 }
 
-
 static char *test_entry_count(void) {
     size_t entry_cnt = entry_get_entry_count();
-    mu_assert("entry count", entry_cnt == 8);
+    mu_assert("entry count", entry_cnt == 10);
     return 0;
 }
 

@@ -2,9 +2,7 @@
 #define ENTRY_H
 
 #include <stdlib.h>
-#include <string.h>
 #include <stdbool.h>
-#include "directions.h"
 #include "dice.h"
 
 typedef struct Coins {
@@ -51,17 +49,17 @@ bool entry_is_value_nil(Entry *entry);
  * Notes
  * -----
  * An Entry is a generic entity that has several uses in the game:
- * 
+ *
  * 1. An Entry acts as a "location". Example: cavern, outhouse, etc.
  * 2. As a "virtual" container, an Entry is a sort of subset of the concept
  *    of a location. A chest can be in a cavern, and a rusty dagger can be in
  *    a chest. This is handled through the location pointer.
- * 
+ *
  *    Cavern [Entry] <- Chest [Entry] <- Rusty dagger [Entry]
- * 
+ *
  * 3. As a placeholder for anything which belongs in the game world, which
  *    may be supplemented by data from another table.
- * 
+ *
  */
 
 #ifdef TEST

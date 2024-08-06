@@ -48,7 +48,7 @@ static int baseline_test_main(void) {
 int main(void) {
     int result = 0;
     result = baseline_test_main()
-        || extra_test_main() 
+        || extra_test_main()
         || parser_test_main()
         || string_utils_test_main()
         || entry_test_main()

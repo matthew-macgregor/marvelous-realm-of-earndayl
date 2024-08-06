@@ -1,8 +1,7 @@
 #ifndef HERO_H
 #define HERO_H
 #include "entry.h"
-
-typedef Entry Weapon;
+#include "weapon.h"
 
 typedef struct Hero {
     Entry *location;

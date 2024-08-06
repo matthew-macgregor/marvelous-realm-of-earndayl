@@ -1,7 +1,10 @@
-#include "game/game_data.h"
+#include "game_data.h"
 #include "dice.h"
+#include "entry.h"
+#include <stdio.h>
 
 DiceRoll range_1d2 = dice_new_die(1, 2);
+DiceRoll range_1d8 = dice_new_die(1, 8);
 
 Entry entries[] = {
     // entry_id, short_description, traits, location, heft, damage (min, max)
@@ -12,7 +15,11 @@ Entry entries[] = {
     {E_WESTERN_PASSAGE, "the western passage", "western passage", NULL, IS_STATIC, NULL, VALUE_NIL},
     {E_ROTTEN_CHEST, "a rotten chest", "rotten chest", EP_WESTERN_PASSAGE, 20, NULL, VALUE_NIL},
     {E_RUSTY_DAGGER, "a rusty dagger", "rusty dagger", EP_ROTTEN_CHEST, 1, &range_1d2, {5,0,0}},
-    {E_COPPER_PENNY, "a copper penny", "copper penny", EP_ENTRY_CAVE, 0, NULL, {1,0,0}}
+    {E_COPPER_PENNY, "a copper penny", "copper penny", EP_ENTRY_CAVE, 0, NULL, {1,0,0}},
+    {E_OGRES_CLUB, "a huge club", "huge club", EP_GRIM_OGRE, 5, &range_1d8, VALUE_NIL},
+
+    // Monsters
+    {E_GRIM_OGRE, "a hideous, grim ogre", "hideous grim ogre", EP_ENTRY_CAVE, IS_STATIC, NULL, {15,0,0}}
 };
 
 Connector connectors[] = {
@@ -27,6 +34,7 @@ Connector connectors[] = {
 #define TREASURE_VALUE_COUNT (size_t)(sizeof treasure_values / sizeof *treasure_values)
 
 extern inline size_t entry_get_entry_count(void) {
+    printf("Entry count: %d\n", (int)ENTRY_COUNT);
     return ENTRY_COUNT;
 }
 
@@ -48,12 +56,12 @@ extern inline ConnectorArrayPtr connector_get_connectors(void) {
  * Note on use of extern inline. By making the definition extern inline but the
  * declaration (see header) not inline, this function should be the equivalent
  * of a macro.
- * 
+ *
  * > If you specify both inline and extern in the function definition, then the
  * > definition is used only for inlining. In no case is the function compiled
- * > on its own, not even if you refer to its address explicitly. Such an 
+ * > on its own, not even if you refer to its address explicitly. Such an
  * > address becomes an external reference, as if you had only declared the
  * > function, and had not defined it.
- * 
- * https://gcc.gnu.org/onlinedocs/gcc/Inline.html 
+ *
+ * https://gcc.gnu.org/onlinedocs/gcc/Inline.html
  */
