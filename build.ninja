@@ -1,4 +1,4 @@
-cflags = -Wall -Werror -Wextra -ansi -pedantic -std=c99 -fsanitize=address,undefined -DDEBUG
+cflags = -Wall -Werror -Wextra -ansi -pedantic -std=c99 -fsanitize=address,undefined -DDEBUG -DCOLORS_OFF
 headers = -Isrc
 
 cflags_test = -Itest $cflags -DTEST

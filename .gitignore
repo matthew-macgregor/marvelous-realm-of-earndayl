@@ -1,3 +1,5 @@
 .ninja_*
 build
 .DS_Store
+project.geany
+*.o

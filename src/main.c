@@ -17,7 +17,7 @@
 static bool get_input(char *input) {
     printf(CON_CYAN "> " CON_YELLOW);
     if (fgets(input, INPUT_MAX_LENGTH, stdin) != NULL) {
-        printf(CON_RESET);
+        printf("%s", CON_RESET);
         return true;
     }
     return false;
