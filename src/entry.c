@@ -5,6 +5,7 @@
 #include "connectors.h"
 #include "directions.h"
 #include "game/game_data.h"
+#include "entry_settings.h"
 
 // -------------------------             N  / E  / S  / W    NE  / NW  / SE /  SW
 static char* exit_letter_mapping[8] = { "N", "E", "S", "W", "NE", "NW", "SE", "SW" };
@@ -94,6 +95,11 @@ const char *entry_get_exits(const Entry *entry) {
     return exits;
 }
 
+bool entry_setting_is_enabled(Entry *entry, EntrySettingFlag flag) {
+	if (entry == NULL) return false;
+	return (entry->settings & flag) > 0;
+}
+
 extern inline bool entry_assign_a_to_b(Entry *a, Entry *b) {
     if (a != NULL) {
         a->location = b;
@@ -133,7 +139,7 @@ static char *test_entry_search_by_trait_and_location_id(void) {
 static char *test_entry_move_entry(void) {
     Entry *container = entry_get_by_entry_id(E_ENTRY_CAVE);
     DiceRoll r = {1, 2, 0, 1};
-    Entry contained = { 55, "a lantern", "rusty", NULL, 1, &r, {0,0,0}};
+    Entry contained = { 55, "a lantern", "rusty", NULL, 1, &r, {0,0,0}, ESET_ALLOW_NONE};
     bool result = entry_assign_a_to_b(&contained, container);
     mu_assert("entry_move_entry: result", result);
     mu_assert("entry_move_entry: entry", contained.location == EP_ENTRY_CAVE);
@@ -166,6 +172,25 @@ static char *test_entry_get_exits(void) {
     return 0;
 }
 
+static char *test_entry_setting_is_enabled(void) {
+	Entry *entry = entry_get_by_entry_id(E_ENTRY_CAVE);
+	mu_assert("entry_setting_is_enabled: E_ENTRY_CAVE, ESET_ALLOW_INTROSPECT",
+		entry_setting_is_enabled(entry, ESET_ALLOW_INTROSPECT) == true);
+	mu_assert("entry_setting_is_enabled: E_ENTRY_CAVE, ESET_ALLOW_INTROSPECT & 0x02",
+		entry_setting_is_enabled(entry, ESET_ALLOW_INTROSPECT | 0x02) == true);
+	mu_assert("Test E_ENTRY_CAVE, ESET_ALLOW_NONE", (entry->settings & ESET_ALLOW_NONE) == 0);
+	entry = entry_get_by_entry_id(E_GRIM_OGRE);
+	mu_assert("entry_setting_is_enabled: E_GRIM_OGRE, ESET_ALLOW_INTROSPECT",
+		entry_setting_is_enabled(entry, ESET_ALLOW_INTROSPECT) == false);
+	// ESET_ALLOW_NONE is never going to return true, essentially nil
+	mu_assert("entry_setting_is_enabled: E_GRIM_OGRE, ESET_ALLOW_NONE",
+		entry_setting_is_enabled(entry, ESET_ALLOW_NONE) == false);
+	mu_assert("Test ESET_ALLOW_NONE", (entry->settings | ESET_ALLOW_NONE) == 0);
+	mu_assert("entry_setting_is_enabled: E_GRIM_OGRE, ESET_ALLOW_INTROSPECT & 0x02",
+		entry_setting_is_enabled(entry, ESET_ALLOW_INTROSPECT & 0x02) == false);
+	return 0;
+}
+
 static char *entry_test_all_tests(void) {
     mu_run_test(test_search_by_trait);
     mu_run_test(test_entry_count);
@@ -174,6 +199,7 @@ static char *entry_test_all_tests(void) {
     mu_run_test(test_entry_get_exits);
     mu_run_test(test_entry_search_by_trait_and_location_id);
     mu_run_test(test_entry_move_entry);
+	mu_run_test(test_entry_setting_is_enabled);
 
     // next test here
     return 0;

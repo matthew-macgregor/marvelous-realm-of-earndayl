@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "dice.h"
+#include "entry_settings.h"
 
 typedef struct Coins {
     int copper;
@@ -12,6 +13,7 @@ typedef struct Coins {
 } Coins;
 
 typedef long entry_id;
+
 typedef struct Entry {
    entry_id id;
    char *short_description;
@@ -20,9 +22,11 @@ typedef struct Entry {
    int heft;
    DiceRoll *damage;
    Coins value;
+   EntrySettings settings;
 } Entry;
 typedef Entry *EntryArrayPtr;
 
+#define DEFAULT_PROPS      {false}
 #define VALUE_NIL          {0,0,0}
 #define ENTRY_UNKNOWN      ((entry_id)-1)
 #define IS_STATIC          ((int)-1)
@@ -37,6 +41,7 @@ entry_id entry_get_start_entry_id(void);
 Entry *entry_search_by_trait(const char *trait);
 Entry *entry_search_by_trait_and_entry_id(const char *trait, entry_id loc);
 Entry *entry_get_by_entry_id(entry_id location_idx);
+bool entry_setting_is_enabled(Entry *entry, EntrySettingFlag flag);
 bool entry_assign_a_to_b(Entry *a, Entry *b);
 bool entry_has_trait(const Entry *entry, const char *trait);
 const char *entry_get_short_description(const Entry *entry);

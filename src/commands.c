@@ -115,7 +115,12 @@ static bool cmd_empty(void) {
         return true;
     }
 
-    for (size_t i = 0; i < entry_count; i++) {
+	if (!entry_setting_is_enabled(container, ESET_ALLOW_INTROSPECT)) {
+		printf("How do you think you'll empty that %s exactly?\n", phrase);
+		return true;
+	}
+
+	for (size_t i = 0; i < entry_count; i++) {
         Entry obj = entries[i];
         int emptied_count = 0;
         if (obj.location == container) {
@@ -245,6 +250,11 @@ static bool cmd_look_in(void) {
         printf("You don't see a %s here.\n", phrase);
         return true;
     }
+
+	if (!entry_setting_is_enabled(container, ESET_ALLOW_INTROSPECT)) {
+		printf("You really can't look inside that %s.\n", phrase);
+		return true;
+	}
 
     bool found_obj = false;
     printf("In %s, you see:", container->short_description);

@@ -36,7 +36,7 @@ static char *test_inv_baseline(void) {
 static char *test_inv_add_object_to_inventory(void) {
     Entry *entry = entry_get_by_entry_id(E_ENTRY_CAVE);
     DiceRoll r = {1,2,0,1};
-    Entry obj = { 55, "a lantern", "rusty", entry, 1, &r, {0,0,0}};
+    Entry obj = { 55, "a lantern", "rusty", entry, 1, &r, {0,0,0}, ESET_ALLOW_NONE};
     inv_add_object_to_inventory(&obj);
     mu_assert("inv_add_object_to_inventory", obj.location == EP_INVENTORY); 
     return 0;

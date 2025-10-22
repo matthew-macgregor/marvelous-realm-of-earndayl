@@ -40,7 +40,7 @@ build build/main: link $
     build/connectors.o $
     build/game/game_data.o $
     build/inventory.o $
-    build/dice.o
+    build/dice.o $
 
 build test: phony build/test
 build build/test.o: cc test/test.c
