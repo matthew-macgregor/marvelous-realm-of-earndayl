@@ -1,6 +1,6 @@
 #ifndef STRING_UTILS_H
 #define STRING_UTILS_H
-
+#include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
 
@@ -8,7 +8,7 @@
 #define size_to_fit_buffer(str, buffer_sz) ((buffer_sz) - strlen(str) - 1)
 
 bool is_empty_or_whitespace(const char *input);
-void s_strip_newline(char *input, size_t buffer_size);
+void s_trim_newline(char *input);
 
 // Implementation
 #ifdef STRING_UTILS_IMPLEMENTATION
@@ -22,17 +22,9 @@ bool is_empty_or_whitespace(const char *input) {
     return true;
 }
 
-void s_strip_newline(char *input, size_t buffer_size) {
-    if (!input) return;
-    for (size_t i = 0; input[i] != '\0' && i < buffer_size; i++) {
-        if (input[i] == '\n') {
-            input[i] = '\0';
-            break;
-        }
-    }
+void s_trim_newline(char *input) {
+	input[strcspn(input, "\n")] = 0; // trim newline characters
 }
-
-
 #endif // STRING_UTILS_IMPLEMENTATION
 
 // TESTS
@@ -47,11 +39,11 @@ extern int tests_run;
 static char *test_strip_newline(void) {
     char input[50];
     memcpy(input, "\n", 2);
-    s_strip_newline(input, 50);
+    s_trim_newline(input);
     mu_assert("empty", input[0] == '\0');
 
     memcpy(input, "aaaaa\n", 6);
-    s_strip_newline(input, 50);
+    s_trim_newline(input);
     mu_assert("whitespace", input[5] == '\0');
     return 0;
 }

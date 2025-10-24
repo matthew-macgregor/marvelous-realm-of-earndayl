@@ -6,6 +6,8 @@
 #include "string_utils.h"
 #include "directions.h"
 
+#define DIRECTION_MAX_LENGTH 12
+
 /* N  / E  / S  / W / NE  / NW  / SE /  SW */
 const char *direction_name_mapping[] = {
     "north",
@@ -49,10 +51,13 @@ extern const char* direction_to_abbr(const Direction d) {
     return direction_letter_mapping[d];
 }
 
+/**
+ * Given a string direction, normalizes it into the expected format.
+ */
 static const char* normalize_direction_string(const char *direction) {
-    static char buffer[INPUT_MAX_LENGTH];
+    static char buffer[DIRECTION_MAX_LENGTH + 1];
     int buff_idx = 0;
-    for (size_t i = 0; i < strlen(direction) && i < INPUT_MAX_LENGTH; i++) {
+    for (size_t i = 0; i < strlen(direction) && i < DIRECTION_MAX_LENGTH; i++) {
         char c = tolower(direction[i]);
         if (!isspace(c)) {
             buffer[buff_idx++] = c;
@@ -65,7 +70,7 @@ static const char* normalize_direction_string(const char *direction) {
 
 /**
  * Given a phrase ("west", "north  east"), returns a Direction.
- * Important: DIRECTION_UNKNOWN (-1) can be returned. 
+ * Important: DIRECTION_UNKNOWN (-1) can be returned.
  */
 extern Direction direction_text_to_direction(const char *direction) {
     const char *normalized = normalize_direction_string(direction);
@@ -152,7 +157,7 @@ static char *test_direction_name_to_direction(void) {
 
     memcpy(input, "north east\0", 11);
     mu_assert("direction_text_to_direction: north east", direction_text_to_direction(input) == NORTHEAST);
-   
+
     #define TEST_STR_0 "north   east\0"
     memcpy(input, TEST_STR_0, (sizeof TEST_STR_0 / sizeof 'c'));
     mu_assert("direction_text_to_direction: north   east", direction_text_to_direction(input) == NORTHEAST);

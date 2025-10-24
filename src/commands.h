@@ -9,7 +9,7 @@ typedef struct Command {
 } Command;
 
 /**
- * Returns true to continue the gameloop, false to exit. 
+ * Returns true to continue the gameloop, false to exit.
  */
 bool interpret_command(const char *input);
 

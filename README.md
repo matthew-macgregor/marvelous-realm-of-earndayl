@@ -13,9 +13,11 @@ Note that this is not a retro computing project. The goal is to create a game th
 ## Project Goals
 
 - Write an homage to WWoE that builds and runs on a wide number of modern machines.
-- Written in C99 with zero dependencies beyond the codebase itself.
-- Avoid all dynamic memory allocation.
+- Written in C99 with minimal dependencies.
+- Avoid dynamic memory allocation as far as possible.
 - Provide a good set of baseline tests.
+
+Adding the `linenoise` text completion library requires dynamic memory allocation, but I felt it was worth it to have history, with the possibility of adding hints and autocompletion in the future. Perhaps at some point I will modify it to only use static allocation. `linenoise` also requires the `gnu99` dialect.
 
 ## License
 
@@ -24,6 +26,8 @@ The bulk of the code in this repo was written from scratch by Matthew MacGregor,
 Some code (and a great deal of inspiration) draws from Ruud Helderman's <r.helderman@hccnet.nl> [excellent example](https://helderman.github.io/htpataic/htpataic01.html) of a text adventure in C, and also carries the MIT license. The more that I work on the project the more I have diverged on my own path.
 
 Minunit is liberally licensed by John Brewer, and comes with NO WARRANTY. See `minunit.h` for more information.
+
+[Linenoise](https://github.com/antirez/linenoise/tree/master) by antirez is under the Simplified BSD License. See [./vendor/linenoise-LICENSE](./vendor/linenoise-LICENSE) for details.
 
 ## Development Prerequisites
 

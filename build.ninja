@@ -1,4 +1,5 @@
 cflags = -Wall -Werror -Wextra -ansi -pedantic -std=c99 -fsanitize=address,undefined -DDEBUG -DCOLORS_OFF
+cflags_modern = -Wall -W -pedantic -Os -std=gnu99
 headers = -Isrc
 
 cflags_test = -Itest $cflags -DTEST
@@ -8,6 +9,11 @@ rule cc
     deps = gcc
     depfile = $out.d
     command = $CC -MD -MF $out.d $headers $cflags -c $in -o $out
+
+rule cc-modern
+    deps = gcc
+    depfile = $out.d
+    command = $CC -MD -MF $out.d $headers $cflags_modern -c $in -o $out
 
 rule link
     command = $CC $in -o $out -g -fsanitize=address,undefined
@@ -30,6 +36,8 @@ build build/connectors.o: cc src/connectors.c
 build build/game/game_data.o: cc src/game/game_data.c
 build build/inventory.o: cc src/inventory.c
 build build/dice.o: cc src/dice.c
+build build/linenoise.o: cc-modern src/linenoise.c
+build build/input.o: cc src/input.c
 build build/main: link $
     build/main.o $
     build/input_parser.o $
@@ -41,6 +49,8 @@ build build/main: link $
     build/game/game_data.o $
     build/inventory.o $
     build/dice.o $
+    build/linenoise.o $
+    build/input.o $
 
 build test: phony build/test
 build build/test.o: cc test/test.c
