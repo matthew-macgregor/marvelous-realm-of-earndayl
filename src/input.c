@@ -13,7 +13,7 @@
 //		linenoiseAddCompletion(lc, "hello there");
 //	}
 //}
-//
+
 //static char *hints(const char *buf, int *color, int *bold) {
 //	if (!strcasecmp(buf,"hello")) {
 //		*color = 35;
@@ -24,6 +24,7 @@
 //}
 
 void input_loop() {
+//	TODO: enable completion and hints
 //	linenoiseSetCompletionCallback(completion);
 //	linenoiseSetHintsCallback(hints);
 	linenoiseHistorySetMaxLen(20);
